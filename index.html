@@ -311,177 +311,152 @@ let suits = [];
 let cart = new Map();
 let currentSuit = null;
 
-// ✅ VARIANTS (EDIT HERE ONLY)
-const VARIANTS = ["-1","-2","-3","-4","-5","-6","-7","-8","-9","-13","-101","-201","-301","-701","-901"];
+/* =========================
+   🔧 CONFIG (IMPORTANT)
+========================= */
 
-// LOAD CART
-const savedCart = localStorage.getItem('ln_cart');
-if(savedCart){
-  cart = new Map(JSON.parse(savedCart));
+// switch this later if needed
+const MODE = "github"; // "local" or "github"
+
+// your repo base
+const BASE_URL = "https://raw.githubusercontent.com/V1si0n-LNpr3D1cf0r/mn-res-b1/main/";
+
+// variants (edit anytime)
+const VARIANTS = [
+  "", "-1", "-2", "-3", "-4", "-5",
+  "-6", "-7", "-8", "-9",
+  "-13", "-101", "-201", "-301", "-701", "-901"
+];
+
+// helper path builder
+function imgPath(folder, id, variant = "") {
+  const base = MODE === "github" ? BASE_URL : "";
+  return `${base}${folder}/${id}${variant}.png`;
 }
 
-// LOAD DATA
-fetch('data.json')
-.then(res=>res.json())
-.then(data=>{
-  suits = data;
-  displaySuits(suits);
-  updateCart();
-});
+/* =========================
+   💾 CART LOAD
+========================= */
 
-// SAVE CART
-function saveCart(){
-  localStorage.setItem('ln_cart', JSON.stringify([...cart]));
+const savedCart = localStorage.getItem("ln_cart");
+if (savedCart) cart = new Map(JSON.parse(savedCart));
+
+function saveCart() {
+  localStorage.setItem("ln_cart", JSON.stringify([...cart]));
 }
 
-// ✅ GET DISPLAY NAME (SAFE)
-function getSuitName(s){
-  if(s.names){
+/* =========================
+   📦 LOAD DATA
+========================= */
 
-    // 🎯 priority order
-    if(s.names.en && s.names.en.trim() !== "") return s.names.en;
-    if(s.names.cn && s.names.cn.trim() !== "") return s.names.cn;
+fetch("data.json")
+  .then(res => res.json())
+  .then(data => {
+    suits = data;
+    displaySuits(suits);
+    updateCart();
+  });
 
-    // fallback to ANY available name
-    return Object.values(s.names).find(n => n && n.trim() !== "") || "Unknown";
-  }
+/* =========================
+   🖼 SUIT DISPLAY
+========================= */
 
-  return s.name || "Unknown";
-
-const name = getSuitName(s);
-
-title.textContent = name;
-
-// optional styling
-if(!s.names?.en){
-  title.style.fontStyle = "italic";
-  title.style.opacity = "0.85";
-}
-}
-
-
-// DISPLAY SUITS (HIDE MISSING IMAGES)
-function displaySuits(list){
-  const grid = document.getElementById('suitGrid');
-  grid.innerHTML = '';
+function displaySuits(list) {
+  const grid = document.getElementById("suitGrid");
+  grid.innerHTML = "";
 
   list.forEach(s => {
-    const img = new Image();
+    const card = document.createElement("div");
+    card.className = "suit-card";
 
-    img.onload = () => {
+    const img = document.createElement("img");
+    img.loading = "lazy";
+    img.src = imgPath("images/suits", s.id);
 
-      const card = document.createElement('div');
-      card.className='suit-card';
-
-      const imgEl = document.createElement('img');
-      imgEl.loading="lazy";
-      imgEl.src = s.cover;
-
-      const title = document.createElement('div');
-      title.textContent = getSuitName(s);
-
-      card.appendChild(imgEl);
-      card.appendChild(title);
-
-      card.onclick = ()=>openSuit(s);
-
-      grid.appendChild(card);
-    };
-
+    // fallback portrait (-1 version etc.)
     img.onerror = () => {
-      // ❌ hidden completely
+      img.onerror = null;
+      img.src = imgPath("images/suits", s.id, "-1");
     };
 
-    img.src = s.cover;
+    const title = document.createElement("div");
+    title.textContent = s.name;
+
+    card.appendChild(img);
+    card.appendChild(title);
+
+    card.onclick = () => openSuit(s);
+
+    grid.appendChild(card);
   });
 }
 
-// 🔍 SEARCH (ID + MULTI-NAME + ALIASES)
-function searchSuit(){
-  const q = document.getElementById('search').value.trim().toLowerCase();
-  const f = document.getElementById('filter').value;
+/* =========================
+   🔎 SEARCH (ID + MULTI NAME)
+========================= */
+
+function searchSuit() {
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  const f = document.getElementById("filter").value;
 
   let filtered = suits;
 
-  // FILTER FIRST
-  if(f !== 'all'){
+  if (f !== "all") {
     filtered = filtered.filter(s => s.category === f);
   }
 
-  if(q !== ''){
+  if (q !== "") {
     filtered = filtered.filter(s => {
+      // ID search
+      if (!isNaN(q)) return s.id.toString().includes(q);
 
-      // ✅ ID SEARCH
-      if(!isNaN(q)){
-        return s.id.toString().includes(q);
-      }
-
-      // ✅ NAME SEARCH
-      let nameText = "";
-
-      if(s.names){
-        nameText = Object.values(s.names).join(" ");
-      } else if(s.name){
-        nameText = s.name;
-      }
-
-      nameText = nameText.toLowerCase();
-
-      // ✅ ALIASES (optional)
-      const aliasText = (s.aliases || []).join(" ").toLowerCase();
-
-      return nameText.includes(q) || aliasText.includes(q);
+      // multi-language name search
+      const names = Object.values(s.names || {}).join(" ").toLowerCase();
+      return (
+        (s.name || "").toLowerCase().includes(q) ||
+        names.includes(q)
+      );
     });
   }
 
   displaySuits(filtered);
 }
 
-function filterSuit(){
+function filterSuit() {
   searchSuit();
 }
 
-// IMAGE FALLBACK
-function loadImageWithFallback(id, img){
-  let i = 0;
+/* =========================
+   🧾 SUIT OPEN
+========================= */
 
-  function tryNext(){
-    if(i >= VARIANTS.length) return;
-    img.src = `images/parts/${id}${VARIANTS[i]}.png`;
-    i++;
-  }
-
-  img.onerror = tryNext;
-  tryNext();
-}
-
-// OPEN SUIT
-function openSuit(suit){
+function openSuit(suit) {
   currentSuit = suit;
 
-  document.getElementById('modal').style.display='flex';
-  document.getElementById('suitTitle').textContent = getSuitName(suit);
+  document.getElementById("modal").style.display = "flex";
+  document.getElementById("suitTitle").textContent = suit.name;
 
-  const grid = document.getElementById('partsGrid');
-  grid.innerHTML='';
+  const grid = document.getElementById("partsGrid");
+  grid.innerHTML = "";
 
-  suit.parts.forEach(id=>{
-    const part = document.createElement('div');
-    part.className='part-card';
+  suit.parts.forEach(id => {
+    const part = document.createElement("div");
+    part.className = "part-card";
 
-    const img = document.createElement('img');
-    img.loading="lazy";
-    loadImageWithFallback(id, img);
+    const img = document.createElement("img");
+    img.loading = "lazy";
 
-    const label = document.createElement('div');
+    loadWithFallback(id, img);
+
+    const label = document.createElement("div");
     label.textContent = id;
 
-    const btns = document.createElement('div');
-    btns.className='btn-group';
+    const btns = document.createElement("div");
+    btns.className = "btn-group";
 
     btns.innerHTML = `
       <button class="small-btn" onclick="addToCart('${id}');event.stopPropagation();">Add</button>
-      <button class="small-btn" onclick="downloadSingle('${id}');event.stopPropagation();">Download</button>
+      <button class="small-btn" onclick="downloadSingle('${id}');event.stopPropagation();">DL</button>
     `;
 
     part.appendChild(img);
@@ -492,43 +467,60 @@ function openSuit(suit){
   });
 }
 
-function closeModal(){
-  document.getElementById('modal').style.display='none';
+/* =========================
+   🖼 IMAGE FALLBACK ENGINE
+========================= */
+
+function loadWithFallback(id, img) {
+  let i = 0;
+
+  function tryNext() {
+    if (i >= VARIANTS.length) return;
+
+    img.src = imgPath("images/parts", id, VARIANTS[i]);
+    i++;
+  }
+
+  img.onerror = tryNext;
+  tryNext();
 }
 
-// CART
-function addToCart(id){
-  cart.set(id,true);
+/* =========================
+   🛒 CART SYSTEM
+========================= */
+
+function addToCart(id) {
+  cart.set(id, true);
   saveCart();
   updateCart();
 }
 
-function removeFromCart(id){
+function removeFromCart(id) {
   cart.delete(id);
   saveCart();
   updateCart();
 }
 
-function updateCart(){
-  document.getElementById('cartCount').textContent = cart.size;
+function updateCart() {
+  document.getElementById("cartCount").textContent = cart.size;
 
-  const container = document.getElementById('cartItems');
-  container.innerHTML='';
+  const container = document.getElementById("cartItems");
+  container.innerHTML = "";
 
-  cart.forEach((_,id)=>{
-    const div = document.createElement('div');
-    div.className='cart-item';
+  cart.forEach((_, id) => {
+    const div = document.createElement("div");
+    div.className = "cart-item";
 
-    const img = document.createElement('img');
-    loadImageWithFallback(id, img);
+    const img = document.createElement("img");
+    loadWithFallback(id, img);
 
-    const label = document.createElement('span');
+    const label = document.createElement("span");
     label.textContent = id;
 
-    const trash = document.createElement('span');
+    const trash = document.createElement("span");
     trash.textContent = "🗑️";
     trash.className = "trash";
-    trash.onclick = ()=>removeFromCart(id);
+    trash.onclick = () => removeFromCart(id);
 
     div.appendChild(img);
     div.appendChild(label);
@@ -538,105 +530,100 @@ function updateCart(){
   });
 }
 
-function toggleCart(){
-  const p=document.getElementById('cartPanel');
-  p.style.display = p.style.display==='block' ? 'none' : 'block';
-}
+/* =========================
+   📥 DOWNLOAD SINGLE
+========================= */
 
-// DOWNLOAD SINGLE (SMART)
-async function downloadSingle(id){
+async function downloadSingle(id) {
+  const zip = new JSZip();
 
-  const found = [];
+  for (let v of VARIANTS) {
+    const url = imgPath("images/parts", id, v);
 
-  for(let v of VARIANTS){
-    const url = `images/parts/${id}${v}.png`;
-
-    try{
+    try {
       const res = await fetch(url, { method: "HEAD" });
-      if(res.ok){
-        found.push({url, name: `${id}${v}.png`});
+      if (res.ok) {
+        const file = await fetch(url);
+        zip.file(`${id}${v}.png`, await file.blob());
       }
-    }catch{}
+    } catch {}
   }
 
-  if(found.length === 0){
-    alert("Image not found!");
-    return;
-  }
-
-  // 👉 SINGLE FILE → direct download
-  if(found.length === 1){
+  zip.generateAsync({ type: "blob" }).then(c => {
     const a = document.createElement("a");
-    a.href = found[0].url;
-    a.download = found[0].name;
-    a.click();
-    return;
-  }
-
-  // 👉 MULTIPLE → ZIP
-  const zip = new JSZip();
-
-  for(let file of found){
-    const res = await fetch(file.url);
-    zip.file(file.name, await res.blob());
-  }
-
-  zip.generateAsync({type:'blob'}).then(c=>{
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(c);
-    a.download=`${id}.zip`;
+    a.href = URL.createObjectURL(c);
+    a.download = `${id}.zip`;
     a.click();
   });
 }
 
-// DOWNLOAD FULL SUIT
-async function downloadSuit(){
+/* =========================
+   📦 DOWNLOAD SUIT
+========================= */
+
+async function downloadSuit() {
   const zip = new JSZip();
 
-  for(let id of currentSuit.parts){
-    for(let v of VARIANTS){
-      const url = `images/parts/${id}${v}.png`;
+  for (let id of currentSuit.parts) {
+    for (let v of VARIANTS) {
+      const url = imgPath("images/parts", id, v);
 
-      try{
+      try {
         const res = await fetch(url);
-        if(!res.ok) continue;
+        if (!res.ok) continue;
 
         zip.file(`${id}${v}.png`, await res.blob());
-      }catch{}
+      } catch {}
     }
   }
 
-  zip.generateAsync({type:'blob'}).then(c=>{
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(c);
-    a.download=`${getSuitName(currentSuit)}.zip`;
+  zip.generateAsync({ type: "blob" }).then(c => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(c);
+    a.download = `${currentSuit.name}.zip`;
     a.click();
   });
 }
 
-// DOWNLOAD CART
-async function downloadCart(){
+/* =========================
+   🧺 DOWNLOAD CART
+========================= */
+
+async function downloadCart() {
   const zip = new JSZip();
 
-  for(let id of cart.keys()){
-    for(let v of VARIANTS){
-      const url = `images/parts/${id}${v}.png`;
+  for (let id of cart.keys()) {
+    for (let v of VARIANTS) {
+      const url = imgPath("images/parts", id, v);
 
-      try{
+      try {
         const res = await fetch(url);
-        if(!res.ok) continue;
+        if (!res.ok) continue;
 
         zip.file(`${id}${v}.png`, await res.blob());
-      }catch{}
+      } catch {}
     }
   }
 
-  zip.generateAsync({type:'blob'}).then(c=>{
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(c);
-    a.download='LN_cart.zip';
+  zip.generateAsync({ type: "blob" }).then(c => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(c);
+    a.download = "LN_cart.zip";
     a.click();
   });
+}
+
+/* =========================
+   🪟 UI HELPERS
+========================= */
+
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
+
+function toggleCart() {
+  const p = document.getElementById("cartPanel");
+  p.style.display = p.style.display === "block" ? "none" : "block";
 }
 </script>
 
