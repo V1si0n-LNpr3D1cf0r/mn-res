@@ -167,6 +167,15 @@ input:focus, select:focus {
 }
 
 /* ===== PART CARDS ===== */
+/* ===== PARTS GRID (Inside Modal) ===== */
+.parts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* ===== PART CARDS ===== */
 .part-card {
   background: white;
   border-radius: 20px;
@@ -200,26 +209,49 @@ input:focus, select:focus {
   width: 100%;
   justify-content: center;
 }
-/* ===== CART PANEL ===== */
+
+/* Keeps the buttons neat and centered */
+.btn-group {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+  justify-content: center;
+}
+
+/* ===== CART PANEL (Pinned to Right) ===== */
 .cart-panel {
-  display: none;
-  position: fixed;
+  display: none; /* Controlled by toggleCart() */
+  position: fixed; /* Keeps it locked to the screen */
   right: 0;
   top: 0;
   width: 320px;
   height: 100%;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98); /* Slightly more solid for readability */
   backdrop-filter: blur(20px);
   border-left: 3px solid var(--nikki-pink);
-  box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+  box-shadow: -10px 0 30px rgba(0,0,0,0.1);
   padding: 25px;
-  z-index: 2000; /* Even higher than the modal */
+  z-index: 2000; /* Ensures it stays above the suit grid and modal */
   box-sizing: border-box;
+  overflow-y: auto; /* Allows scrolling if you have many items */
 }
 
+/* Updated Cart Item for consistency */
 .cart-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   border-bottom: 1px solid #ffd1e3;
-  padding: 10px 0;
+  padding: 12px 0;
+}
+
+.cart-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  background: radial-gradient(#fff, #ffeef6);
+  border-radius: 12px;
+  flex-shrink: 0;
 }
     </style>
 </head>
@@ -283,7 +315,7 @@ let currentSuit = null;
 const BASE_USER = "https://raw.githubusercontent.com/V1si0n-LNpr3D1cf0r";
 
 // 📝 Add your repository names here in order of priority!
-const REPOS = ["mn-res-b1", "mn-res-b2", "mn-res"]; 
+const REPOS = ["mn-res-b1", "mn-res-b2", "mn-res-b3"]; 
 
 const VARIANTS = ["", "-1", "-2", "-3", "-4", "-5", "-6", "-7", "-8", "-9", "-13", "-101", "-201", "-301", "-701", "-901"];
 
