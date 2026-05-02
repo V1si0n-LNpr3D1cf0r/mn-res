@@ -1,273 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Atelier Archives</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier Archives</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/V1si0n-LNpr3D1cf0r/mn-res/main/head_12.png">
+    <style>
+/* ===== THEMES & VARIABLES ===== */
+:root {
+  --nikki-pink: #ff85ba;
+  --soft-blush: #ffe4f0;
+  --lavender: #bd93f9;
+  --glass-bg: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --text-main: #5d4157;
+}
 
-<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/V1si0n-LNpr3D1cf0r/mn-res/main/head_12.png">
-
-<style>
-/* ===== BACKGROUND ===== */
+/* ===== GLOBAL STYLES ===== */
 body {
   margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #ffe6f0, #fff5fa, #ffe0ec);
-  color: #4a2b3a;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: 
+    radial-gradient(circle at top right, #fff0f6, transparent),
+    radial-gradient(circle at bottom left, #f3e8ff, transparent),
+    #ffe4f0;
+  background-attachment: fixed;
+  color: var(--text-main);
 }
 
 /* ===== HEADER ===== */
 header {
-  padding: 16px;
+  padding: 25px;
   text-align: center;
+  font-family: "Georgia", serif;
   font-weight: bold;
-  font-size: 20px;
-  background: linear-gradient(90deg, #ff6fae, #ff9bd0);
-  color: white;
-  box-shadow: 0 6px 20px rgba(255,105,180,0.4);
-  letter-spacing: 1px;
+  font-size: 28px;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  color: var(--nikki-pink);
+  text-shadow: 2px 2px 4px rgba(255, 133, 186, 0.2);
+  border-bottom: 2px solid var(--glass-border);
+  letter-spacing: 2px;
 }
 
-/* ===== TOP BAR ===== */
+/* ===== TOP BAR (Search & Filter) ===== */
 .topbar {
   display: flex;
-  gap: 10px;
-  padding: 12px;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
   flex-wrap: wrap;
 }
 
-/* INPUTS */
 input, select {
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #ffd1e3;
-  background: rgba(255,255,255,0.8);
-  backdrop-filter: blur(6px);
-  transition: 0.2s;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  color: var(--text-main);
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
 }
 
 input:focus, select:focus {
-  border-color: #ff6fae;
-  box-shadow: 0 0 10px rgba(255,105,180,0.4);
+  background: white;
+  border-color: var(--nikki-pink);
+  transform: scale(1.02);
 }
 
-/* BUTTON */
-.cart-btn {
-  background: linear-gradient(135deg,#ff6fae,#ff9bd0);
+/* ===== CUTE BUTTONS ===== */
+.cart-btn, .small-btn, .download-all {
+  background: linear-gradient(135deg, #ff85ba, #ffb3d9);
   color: white;
   border: none;
-  padding: 10px 14px;
-  border-radius: 12px;
+  padding: 12px 24px;
+  border-radius: 25px;
   cursor: pointer;
-  transition: 0.25s;
-  box-shadow: 0 4px 12px rgba(255,105,180,0.3);
+  font-weight: bold;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 15px rgba(255, 133, 186, 0.4);
 }
 
-.cart-btn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(255,105,180,0.5);
+.cart-btn:hover, .small-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(255, 133, 186, 0.6);
 }
 
-/* ===== GRID ===== */
+/* ===== SUIT GRID ===== */
 .suit-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 18px;
-  padding: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 25px;
+  padding: 25px;
 }
 
 /* ===== SUIT CARD ===== */
 .suit-card {
-  background: rgba(255,255,255,0.75);
-  border-radius: 18px;
-  padding: 10px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 15px;
   text-align: center;
   cursor: pointer;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-  transition: 0.25s;
-  position: relative;
-  overflow: hidden;
+  backdrop-filter: blur(12px);
+  transition: all 0.4s ease;
+  animation: float 6s ease-in-out infinite;
 }
 
-.suit-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
-  opacity: 0;
-  transition: 0.4s;
-}
-
-.suit-card:hover::after {
-  opacity: 1;
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
 .suit-card:hover {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 12px 30px rgba(255,105,180,0.25);
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.05) rotate(1deg);
+  border-color: var(--nikki-pink);
 }
 
 .suit-card img {
   width: 100%;
-  height: 190px;
+  height: 220px;
   object-fit: contain;
-  border-radius: 12px;
+  border-radius: 18px;
+  margin-bottom: 10px;
 }
 
-/* ===== MODAL ===== */
+/* ===== MODAL (Glassmorphism) ===== */
 .modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(6px);
+  display: none; /* Hidden by default */
+  position: fixed; 
+  z-index: 1000; /* Sits on top of everything */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 182, 193, 0.3); /* Soft pink tint */
+  backdrop-filter: blur(10px); /* The "Glass" effect */
   justify-content: center;
   align-items: center;
 }
 
-/* POPUP */
 .modal-content {
-  background: rgba(255,255,255,0.9);
-  padding: 20px;
-  border-radius: 20px;
-  width: 92%;
-  max-width: 950px;
-  max-height: 90%;
-  overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-  animation: pop 0.25s ease;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 30px;
+  border-radius: 30px;
+  width: 90%;
+  max-width: 900px;
+  max-height: 85vh; /* Prevents it from going off-screen */
+  overflow-y: auto; /* Scrollable if there are many parts */
+  position: relative;
+  border: 2px solid white;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
 
-@keyframes pop {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* ===== PART GRID ===== */
+/* ===== PART CARDS ===== */
+/* ===== PARTS GRID (Inside Modal) ===== */
 .parts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
 }
 
-/* PART CARD */
+/* ===== PART CARDS ===== */
 .part-card {
-  background: rgba(255,255,255,0.85);
-  border-radius: 14px;
-  padding: 6px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  transition: 0.2s;
+  background: white;
+  border-radius: 20px;
+  padding: 10px;
+  border: 1px solid #ffe4f0;
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column; /* Stacks the image, text, and buttons vertically */
+  align-items: center;
 }
 
 .part-card:hover {
   transform: scale(1.05);
-  box-shadow: 0 8px 18px rgba(255,105,180,0.3);
+  border-color: var(--nikki-pink);
+  box-shadow: 0 5px 15px rgba(255, 133, 186, 0.2);
 }
 
-/* IMAGE */
 .part-card img {
   width: 100%;
-  height: 120px;
-  object-fit: contain;
-  border-radius: 10px;
-  background: repeating-conic-gradient(#eee 0% 25%, #fff 0% 50%) 50% / 10px 10px;
+  height: 130px; /* This makes every single preview exactly the same height! */
+  object-fit: contain; /* Scales the image down to fit the box perfectly */
+  background: radial-gradient(#fff, #ffeef6);
+  border-radius: 15px;
+  margin-bottom: 8px;
 }
 
-/* BUTTON GROUP */
+/* Keeps the buttons neat and centered */
 .btn-group {
   display: flex;
-  gap: 4px;
-  margin-top: 4px;
+  gap: 5px;
+  width: 100%;
+  justify-content: center;
 }
-
-.small-btn {
-  flex: 1;
-  padding: 6px;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(135deg,#ff7fb3,#ff9bd0);
-  color: white;
-  cursor: pointer;
-  font-size: 12px;
-  transition: 0.2s;
-}
-
-.small-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(255,105,180,0.4);
-}
-
-/* DOWNLOAD ALL */
-.download-all {
-  margin-bottom: 12px;
-  padding: 10px 12px;
-  border: none;
-  background: linear-gradient(135deg,#ff6fae,#ff9bd0);
-  color: white;
-  border-radius: 12px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(255,105,180,0.3);
-}
-
-/* ===== CART ===== */
+/* ===== CART PANEL ===== */
 .cart-panel {
+  display: none;
   position: fixed;
   right: 0;
   top: 0;
-  width: 300px;
+  width: 320px;
   height: 100%;
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
-  border-left: 2px solid #ff6fae;
-  padding: 14px;
-  overflow-y: auto;
-  display: none;
-  box-shadow: -12px 0 30px rgba(0,0,0,0.15);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-left: 3px solid var(--nikki-pink);
+  box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+  padding: 25px;
+  z-index: 2000; /* Even higher than the modal */
+  box-sizing: border-box;
 }
 
-/* CART ITEM */
 .cart-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-  background: white;
-  padding: 6px;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  border-bottom: 1px solid #ffd1e3;
+  padding: 10px 0;
 }
-
-.cart-item img {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-.trash {
-  cursor: pointer;
-  color: #ff4d6d;
-  margin-left: auto;
-  transition: 0.2s;
-}
-
-.trash:hover {
-  transform: scale(1.2);
-}
-</style>
-
+    </style>
 </head>
-
 <body>
 
 <header>HDA Archives</header>
 
 <div class="topbar">
-  <input type="text" id="search" placeholder="Search suit..." oninput="searchSuit()">
-  <select id="filter" onchange="filterSuit()">
-    <option value="all">All</option>
+    <input type="text" id="search" placeholder="Search suit..." oninput="searchSuit()">
+    <select id="filter" onchange="filterSuit()">
     <option value="Classic">Classic</option>
     <option value="Luxury">Luxury</option>
     <option value="Time Memories">Time Memories</option>
@@ -282,28 +244,32 @@ input:focus, select:focus {
     <option value="Festivals">Festivals</option>
     <option value="Troupe">Troupe</option>
     <option value="4 Seasons">4 Seasons</option>
+    <option value="Imperial Palace">Imperial Palace</option>
     <option value="Happiness">Happiness</option>
     <option value="Wonder Museum">Wonder Museum</option>
     <option value="Fairytale">Fairytale</option>
     <option value="Gallery">Gallery</option>
   </select>
-  <button class="cart-btn" onclick="toggleCart()">Cart (<span id="cartCount">0</span>)</button>
+    <button class="cart-btn" onclick="toggleCart()">Cart (<span id="cartCount">0</span>)</button>
 </div>
 
 <div class="suit-grid" id="suitGrid"></div>
 
+<!-- Modal -->
 <div class="modal" id="modal" onclick="closeModal()">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <h2 id="suitTitle"></h2>
-    <button class="download-all" onclick="downloadSuit()">Download Full Suit</button>
-    <div class="parts-grid" id="partsGrid"></div>
-  </div>
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h2 id="suitTitle"></h2>
+        <button class="small-btn" style="margin-bottom:10px; padding: 10px;" onclick="downloadSuit()">Download Full Suit</button>
+        <div class="parts-grid" id="partsGrid"></div>
+    </div>
 </div>
 
+<!-- Cart Panel -->
 <div class="cart-panel" id="cartPanel">
-  <h3>Cart</h3>
-  <div id="cartItems"></div>
-  <button onclick="downloadCart()">Download Cart</button>
+    <h3>My Cart</h3>
+    <div id="cartItems"></div>
+    <button class="small-btn" style="width:100%; margin-top:10px; padding:10px;" onclick="downloadCart()">Download Cart</button>
+    <button class="small-btn" style="width:100%; margin-top:5px; background:#ccc;" onclick="toggleCart()">Close</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -313,37 +279,36 @@ let suits = [];
 let cart = new Map();
 let currentSuit = null;
 
-/* =========================
-   🔧 CONFIG
-========================= */
+const BASE_USER = "https://raw.githubusercontent.com/V1si0n-LNpr3D1cf0r";
 
-// CHANGE THIS IF NEEDED
-const MODE = "github";
+// 📝 Add your repository names here in order of priority!
+const REPOS = ["mn-res-b1", "mn-res-b2", "mn-res"]; 
 
-// your repo base (IMPORTANT: must end with /)
-const BASE = "https://raw.githubusercontent.com/V1si0n-LNpr3D1cf0r/mn-res-b1/main";
-
-// variants list
-const VARIANTS = [
-  "", "-1", "-2", "-3", "-4", "-5",
-  "-6", "-7", "-8", "-9",
-  "-13", "-101", "-201", "-301", "-701", "-901"
-];
-
-// helper path builder
-function getPath(type, id, v = "") {
-  return `${BASE}/${type}/${id}${v}.png`;
-}
+const VARIANTS = ["", "-1", "-2", "-3", "-4", "-5", "-6", "-7", "-8", "-9", "-13", "-101", "-201", "-301", "-701", "-901"];
 
 /* =========================
-   💾 CART LOAD
+   🔍 SMART FINDER
 ========================= */
 
-const saved = localStorage.getItem("ln_cart");
-if (saved) cart = new Map(JSON.parse(saved));
+// This function tries every repo in the REPOS list until it finds the image
+function findImage(id, isSuit, variant, callback) {
+    const folder = isSuit ? "suits" : "parts";
+    let repoIndex = 0;
 
-function saveCart() {
-  localStorage.setItem("ln_cart", JSON.stringify([...cart]));
+    function tryNextRepo() {
+        if (repoIndex >= REPOS.length) return; // Not found anywhere
+
+        const url = `${BASE_USER}/${REPOS[repoIndex]}/main/images/${folder}/${id}${variant}.png`;
+        const img = new Image();
+        
+        img.onload = () => callback(url); // Found it!
+        img.onerror = () => {
+            repoIndex++;
+            tryNextRepo(); // Try the next bucket
+        };
+        img.src = url;
+    }
+    tryNextRepo();
 }
 
 /* =========================
@@ -351,321 +316,226 @@ function saveCart() {
 ========================= */
 
 fetch("data.json")
-  .then(r => r.json())
-  .then(data => {
-    suits = data;
-    displaySuits(suits);
-    updateCart();
-  });
+    .then(r => r.json())
+    .then(data => {
+        suits = data;
+        displaySuits(suits);
+        loadCart();
+    })
+    .catch(err => console.error("Could not load data.json", err));
 
 /* =========================
-    🖼 SUIT GRID (FIXED)
+    🖼 SUIT GRID
 ========================= */
+
 function displaySuits(list) {
-  const grid = document.getElementById("suitGrid");
-  grid.innerHTML = "";
+    const grid = document.getElementById("suitGrid");
+    grid.innerHTML = "";
 
-  const fragment = document.createDocumentFragment();
+    list.forEach(s => {
+        if (!s || !s.id) return;
+        
+        // Find the suit cover image in any bucket
+        findImage(s.id, true, "", (foundUrl) => {
+            createCard(s, foundUrl);
+        });
+    });
+}
 
-  list.forEach(s => {
-    if (!s || !s.id) return;
-
-    const primary = getPath("images/suits", s.id);
-
-    // ✅ PRECHECK IMAGE FIRST (prevents empty cards)
-    const testImg = new Image();
-
-    testImg.onload = () => {
-      createCard(s, primary);
-    };
-
-    testImg.onerror = () => {
-      const fallback = getPath("images/suits", s.id, "-1");
-
-      const fallbackImg = new Image();
-
-      fallbackImg.onload = () => {
-        createCard(s, fallback);
-      };
-
-      fallbackImg.onerror = () => {
-        // ❌ no valid image → DO NOT SHOW CARD
-      };
-
-      fallbackImg.src = fallback;
-    };
-
-    testImg.src = primary;
-  });
+/* =========================
+    🖼 SUIT GRID (Fixed Name Logic)
+========================= */
 
 function createCard(s, imgSrc) {
+    const grid = document.getElementById("suitGrid");
     const card = document.createElement("div");
     card.className = "suit-card";
 
-    const img = document.createElement("img");
-    img.loading = "lazy";
-    img.src = imgSrc;
+    // This checks every possible place a name could be hiding!
+    const name = s.names?.en || s.names?.cn || s.names?.jp || s.name || s.SuitName || "Unnamed Suit";
 
-    const name =
-      s.names?.en ||
-      s.names?.cn ||
-      s.names?.jp ||
-      s.names?.kr ||
-      s.name ||
-      "Unnamed Suit";
-
-    const title = document.createElement("div");
-    title.textContent = name;
-
-    card.appendChild(img);
-    card.appendChild(title);
-
+    card.innerHTML = `
+        <img src="${imgSrc}" loading="lazy">
+        <div style="margin-top:8px; font-weight:bold;">${name}</div>
+    `;
     card.onclick = () => openSuit(s);
-
-    // Append directly to the grid since this is called asynchronously
     grid.appendChild(card);
-  }
-}
-
-function searchSuit() {
-  const q = document.getElementById("search").value.trim().toLowerCase();
-  const f = document.getElementById("filter").value;
-
-  const filtered = suits.filter(s => {
-    // 1. Check Category
-    if (f !== "all" && s.category !== f) return false;
-
-    // 2. Check Search Query
-    if (q === "") return true;
-    
-    // Search by ID
-    if (!isNaN(q) && s.id.toString().includes(q)) return true;
-
-    // NEW: Search through all name fields (en, cn, jp, etc.)
-    const nameValues = Object.values(s.names || {}).map(val => val.toLowerCase());
-    return nameValues.some(name => name.includes(q));
-  });
-
-  displaySuits(filtered);
-}
-
-function filterSuit() {
-  searchSuit();
 }
 
 /* =========================
-   🧾 OPEN SUIT
+   🧾 OPEN SUIT (Fixed Name Logic)
 ========================= */
 
 function openSuit(suit) {
-  currentSuit = suit;
+    currentSuit = suit;
+    document.getElementById("modal").style.display = "flex";
+    
+    // Check all name variants here too!
+    const suitName = suit.names?.en || suit.names?.cn || suit.names?.jp || suit.name || suit.SuitName || "Suit Parts";
+    document.getElementById("suitTitle").textContent = suitName;
 
-  document.getElementById("modal").style.display = "flex";
-  document.getElementById("suitTitle").textContent = suit.name;
+    const grid = document.getElementById("partsGrid");
+    grid.innerHTML = "Nikki's Scanning Wardrobe...";
 
-  const grid = document.getElementById("partsGrid");
-  grid.innerHTML = "";
+    let loadedAny = false;
 
-  suit.parts.forEach(id => {
-    const part = document.createElement("div");
-    part.className = "part-card";
+    suit.parts.forEach(id => {
+        VARIANTS.forEach(v => {
+            findImage(id, false, v, (foundUrl) => {
+                if (!loadedAny) { grid.innerHTML = ""; loadedAny = true; }
+                
+                const partCard = document.createElement("div");
+                partCard.className = "part-card";
+                const label = v === "" ? id : `${id}${v}`;
+                
+                partCard.innerHTML = `
+                    <img src="${foundUrl}" loading="lazy">
+                    <div style="font-size:10px; margin:4px 0;">${label}</div>
+                    <div class="btn-group">
+                        <button class="small-btn" onclick="addToCart('${label}', '${foundUrl}')">Add</button>
+                        <button class="small-btn" onclick="downloadDirect('${foundUrl}', '${label}.png')">DL</button>
+                    </div>
+                `;
+                grid.appendChild(partCard);
+            });
+        });
+    });
 
-    const img = document.createElement("img");
-    img.loading = "lazy";
-
-    loadFallback(id, img);
-
-    const label = document.createElement("div");
-    label.textContent = id;
-
-    const btns = document.createElement("div");
-    btns.className = "btn-group";
-
-    btns.innerHTML = `
-      <button class="small-btn" onclick="addToCart('${id}');event.stopPropagation();">Add</button>
-      <button class="small-btn" onclick="downloadSingle('${id}');event.stopPropagation();">Download</button>
-    `;
-
-    part.appendChild(img);
-    part.appendChild(label);
-    part.appendChild(btns);
-
-    grid.appendChild(part);
-  });
+    setTimeout(() => { if (!loadedAny) grid.innerHTML = "Nikki got distracted... (Reopen me again to see clothing parts!)"; }, 3000);
 }
 
 /* =========================
-   🖼 FALLBACK ENGINE (FIXED)
+   🛒 CART LOGIC
 ========================= */
 
-function loadFallback(id, img) {
-  let i = 0;
-
-  function tryNext() {
-    if (i >= VARIANTS.length) return;
-
-    img.src = getPath("images/parts", id, VARIANTS[i]);
-    i++;
-  }
-
-  img.onerror = tryNext;
-  tryNext();
-}
-
-/* =========================
-   🛒 CART
-========================= */
-
-function addToCart(id) {
-  cart.set(id, true);
-  saveCart();
-  updateCart();
+function addToCart(id, url) {
+    cart.set(id, url);
+    saveCart();
+    updateCartUI();
 }
 
 function removeFromCart(id) {
-  cart.delete(id);
-  saveCart();
-  updateCart();
+    cart.delete(id);
+    saveCart();
+    updateCartUI();
 }
 
-function updateCart() {
-  document.getElementById("cartCount").textContent = cart.size;
-  const container = document.getElementById("cartItems");
-  container.innerHTML = "";
-
-  cart.forEach((_, fullId) => {
-    const div = document.createElement("div");
-    div.className = "cart-item";
-
-    const img = document.createElement("img");
-    // fullId already contains the variant if it was added from the new modal
-    img.src = `${BASE}/images/parts/${fullId}.png`; 
-
-    const label = document.createElement("span");
-    label.textContent = fullId;
-
-    const trash = document.createElement("span");
-    trash.textContent = "🗑️";
-    trash.className = "trash";
-    trash.onclick = () => removeFromCart(fullId);
-
-    div.appendChild(img);
-    div.appendChild(label);
-    div.appendChild(trash);
-    container.appendChild(div);
-  });
+function saveCart() {
+    localStorage.setItem("ln_cart", JSON.stringify([...cart]));
 }
 
-/* =========================
-   📦 DOWNLOAD SINGLE
-========================= */
-
-async function downloadSingle(id) {
-  const zip = new JSZip();
-
-  for (let v of VARIANTS) {
-    const url = getPath("images/parts", id, v);
-
-    try {
-      const res = await fetch(url);
-      if (!res.ok) continue;
-
-      zip.file(`${id}${v}.png`, await res.blob());
-    } catch {}
-  }
-
-  zip.generateAsync({ type: "blob" }).then(c => {
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(c);
-    a.download = `${id}.zip`;
-    a.click();
-  });
-}
-
-/* =========================
-   📦 DOWNLOAD SUIT
-========================= */
-
-async function downloadSuit() {
-  const zip = new JSZip();
-
-  for (let id of currentSuit.parts) {
-    for (let v of VARIANTS) {
-      const url = getPath("images/parts", id, v);
-
-      try {
-        const res = await fetch(url);
-        if (!res.ok) continue;
-
-        zip.file(`${id}${v}.png`, await res.blob());
-      } catch {}
+function loadCart() {
+    const saved = localStorage.getItem("ln_cart");
+    if (saved) {
+        cart = new Map(JSON.parse(saved));
+        updateCartUI();
     }
-  }
+}
 
-  zip.generateAsync({ type: "blob" }).then(c => {
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(c);
-    a.download = `${currentSuit.name}.zip`;
-    a.click();
-  });
+function updateCartUI() {
+    document.getElementById("cartCount").textContent = cart.size;
+    const container = document.getElementById("cartItems");
+    container.innerHTML = "";
+
+    cart.forEach((url, id) => {
+        const item = document.createElement("div");
+        item.className = "cart-item";
+        item.innerHTML = `
+            <img src="${url}">
+            <span style="font-size:12px;">${id}</span>
+            <span class="trash" onclick="removeFromCart('${id}')">🗑️</span>
+        `;
+        container.appendChild(item);
+    });
 }
 
 /* =========================
-   🧺 DOWNLOAD CART
+   📦 DOWNLOADS
 ========================= */
-
-async function downloadCart() {
-  const zip = new JSZip();
-
-  for (let id of cart.keys()) {
-    for (let v of VARIANTS) {
-      const url = getPath("images/parts", id, v);
-
-      try {
-        const res = await fetch(url);
-        if (!res.ok) continue;
-
-        zip.file(`${id}${v}.png`, await res.blob());
-      } catch {}
-    }
-  }
-
-  zip.generateAsync({ type: "blob" }).then(c => {
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(c);
-    a.download = "LN_cart.zip";
-    a.click();
-  });
-}
 
 async function downloadDirect(url, filename) {
-  try {
     const res = await fetch(url);
     const blob = await res.blob();
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = filename;
     a.click();
-    URL.revokeObjectURL(a.href);
-  } catch (e) {
-    alert("Download failed.");
-  }
+}
+
+async function downloadSuit() {
+    const zip = new JSZip();
+    const imgs = document.querySelectorAll("#partsGrid img");
+    
+    if (imgs.length === 0) return alert("No images to download!");
+
+    for (let img of imgs) {
+        const res = await fetch(img.src);
+        const blob = await res.blob();
+        const name = img.src.split('/').pop();
+        zip.file(name, blob);
+    }
+
+    zip.generateAsync({type:"blob"}).then(content => {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(content);
+        a.download = `${currentSuit.name}.zip`;
+        a.click();
+    });
+}
+
+async function downloadCart() {
+    if (cart.size === 0) return alert("Cart is empty!");
+    const zip = new JSZip();
+
+    for (let [id, url] of cart.entries()) {
+        const res = await fetch(url);
+        const blob = await res.blob();
+        zip.file(`${id}.png`, blob);
+    }
+
+    zip.generateAsync({type:"blob"}).then(content => {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(content);
+        a.download = "Nikki_Cart.zip";
+        a.click();
+    });
 }
 
 /* =========================
-   🪟 UI
+   UI HELPERS
 ========================= */
 
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
+function searchSuit() {
+    const q = document.getElementById("search").value.toLowerCase();
+    
+    const filtered = suits.filter(s => {
+        // Get all possible name values into one string to search against
+        const allNames = [
+            s.name, 
+            s.SuitName, 
+            ...(s.names ? Object.values(s.names) : [])
+        ].join(" ").toLowerCase();
+
+        return allNames.includes(q) || s.id.toString().includes(q);
+    });
+    
+    displaySuits(filtered);
+}
+
+function filterSuit() {
+    const f = document.getElementById("filter").value;
+    const filtered = f === "all" ? suits : suits.filter(s => s.category === f);
+    displaySuits(filtered);
 }
 
 function toggleCart() {
-  const p = document.getElementById("cartPanel");
-  p.style.display = p.style.display === "block" ? "none" : "block";
+    const p = document.getElementById("cartPanel");
+    p.style.display = p.style.display === "block" ? "none" : "block";
 }
 
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
+}
 </script>
-
 </body>
 </html>
