@@ -366,39 +366,62 @@ function displaySuits(list) {
   const fragment = document.createDocumentFragment();
 
   list.forEach(s => {
+    if (!s || !s.id) return;
+
+    const primary = getPath("images/suits", s.id);
+
+    const testImg = new Image();
+
+    testImg.onload = () => {
+      createCard(s, primary);
+    };
+
+    testImg.onerror = () => {
+      const fallback = getPath("images/suits", s.id, "-1");
+
+      const fallbackImg = new Image();
+
+      fallbackImg.onload = () => {
+        createCard(s, fallback);
+      };
+
+      fallbackImg.onerror = () => {
+      };
+
+      fallbackImg.src = fallback;
+    };
+
+    testImg.src = primary;
+  });
+
+  function createCard(s, imgSrc) {
     const card = document.createElement("div");
     card.className = "suit-card";
-    
-    // 1. FIX: Access the name from the names object (names.en or names.cn)
-    const suitName = s.names?.en || s.names?.cn || s.name || "Unnamed Suit";
 
     const img = document.createElement("img");
     img.loading = "lazy";
+    img.src = imgSrc;
 
-    const primary = getPath("images/suits", s.id);
-    img.src = primary;
-
-    // 2. FIX: Chain fallbacks and HIDE if both fail
-    img.onerror = () => {
-      // First attempt failed: Try the "-1" variant
-      img.onerror = () => {
-        // Second attempt failed: This suit has NO image, so hide the whole card
-        card.style.display = "none";
-      };
-      img.src = getPath("images/suits", s.id, "-1");
-    };
+    const name =
+      s.names?.en ||
+      s.names?.cn ||
+      s.names?.jp ||
+      s.names?.kr ||
+      s.name ||
+      "Unnamed Suit";
 
     const title = document.createElement("div");
-    title.textContent = suitName;
+    title.textContent = name;
 
     card.appendChild(img);
     card.appendChild(title);
+
     card.onclick = () => openSuit(s);
 
     fragment.appendChild(card);
-  });
 
-  grid.appendChild(fragment);
+    grid.appendChild(fragment);
+  }
 }
 
 function searchSuit() {
