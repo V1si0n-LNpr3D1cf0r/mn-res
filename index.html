@@ -312,16 +312,16 @@ let cart = new Map();
 let currentSuit = null;
 
 /* =========================
-   🔧 CONFIG (IMPORTANT)
+   🔧 CONFIG
 ========================= */
 
-// switch this later if needed
-const MODE = "github"; // "local" or "github"
+// CHANGE THIS IF NEEDED
+const MODE = "github";
 
-// your repo base
-const BASE_URL = "https://raw.githubusercontent.com/V1si0n-LNpr3D1cf0r/mn-res-b1/main/";
+// your repo base (IMPORTANT: must end with /)
+const BASE = "https://raw.githubusercontent.com/V1si0n-LNpr3D1cf0r/mn-res-b1/main";
 
-// variants (edit anytime)
+// variants list
 const VARIANTS = [
   "", "-1", "-2", "-3", "-4", "-5",
   "-6", "-7", "-8", "-9",
@@ -329,17 +329,19 @@ const VARIANTS = [
 ];
 
 // helper path builder
-function imgPath(folder, id, variant = "") {
-  const base = MODE === "github" ? BASE_URL : "";
-  return `${base}${folder}/${id}${variant}.png`;
+function getPath(type, id, v = "") {
+  if (MODE === "github") {
+    return `${BASE}${type}/${id}${v}.png`;
+  }
+  return `${type}/${id}${v}.png`;
 }
 
 /* =========================
    💾 CART LOAD
 ========================= */
 
-const savedCart = localStorage.getItem("ln_cart");
-if (savedCart) cart = new Map(JSON.parse(savedCart));
+const saved = localStorage.getItem("ln_cart");
+if (saved) cart = new Map(JSON.parse(saved));
 
 function saveCart() {
   localStorage.setItem("ln_cart", JSON.stringify([...cart]));
@@ -350,7 +352,7 @@ function saveCart() {
 ========================= */
 
 fetch("data.json")
-  .then(res => res.json())
+  .then(r => r.json())
   .then(data => {
     suits = data;
     displaySuits(suits);
@@ -358,7 +360,7 @@ fetch("data.json")
   });
 
 /* =========================
-   🖼 SUIT DISPLAY
+   🖼 SUIT GRID (FIXED)
 ========================= */
 
 function displaySuits(list) {
@@ -371,12 +373,14 @@ function displaySuits(list) {
 
     const img = document.createElement("img");
     img.loading = "lazy";
-    img.src = imgPath("images/suits", s.id);
 
-    // fallback portrait (-1 version etc.)
+    // direct assign (NO preload blocking)
+    img.src = getPath("images/suits", s.id);
+
+    // fallback (important)
     img.onerror = () => {
       img.onerror = null;
-      img.src = imgPath("images/suits", s.id, "-1");
+      img.src = getPath("images/suits", s.id, "-1");
     };
 
     const title = document.createElement("div");
@@ -392,7 +396,7 @@ function displaySuits(list) {
 }
 
 /* =========================
-   🔎 SEARCH (ID + MULTI NAME)
+   🔎 SEARCH + FILTER
 ========================= */
 
 function searchSuit() {
@@ -407,10 +411,8 @@ function searchSuit() {
 
   if (q !== "") {
     filtered = filtered.filter(s => {
-      // ID search
       if (!isNaN(q)) return s.id.toString().includes(q);
 
-      // multi-language name search
       const names = Object.values(s.names || {}).join(" ").toLowerCase();
       return (
         (s.name || "").toLowerCase().includes(q) ||
@@ -427,7 +429,7 @@ function filterSuit() {
 }
 
 /* =========================
-   🧾 SUIT OPEN
+   🧾 OPEN SUIT
 ========================= */
 
 function openSuit(suit) {
@@ -446,7 +448,7 @@ function openSuit(suit) {
     const img = document.createElement("img");
     img.loading = "lazy";
 
-    loadWithFallback(id, img);
+    loadFallback(id, img);
 
     const label = document.createElement("div");
     label.textContent = id;
@@ -468,16 +470,16 @@ function openSuit(suit) {
 }
 
 /* =========================
-   🖼 IMAGE FALLBACK ENGINE
+   🖼 FALLBACK ENGINE (FIXED)
 ========================= */
 
-function loadWithFallback(id, img) {
+function loadFallback(id, img) {
   let i = 0;
 
   function tryNext() {
     if (i >= VARIANTS.length) return;
 
-    img.src = imgPath("images/parts", id, VARIANTS[i]);
+    img.src = getPath("images/parts", id, VARIANTS[i]);
     i++;
   }
 
@@ -486,7 +488,7 @@ function loadWithFallback(id, img) {
 }
 
 /* =========================
-   🛒 CART SYSTEM
+   🛒 CART
 ========================= */
 
 function addToCart(id) {
@@ -512,7 +514,9 @@ function updateCart() {
     div.className = "cart-item";
 
     const img = document.createElement("img");
-    loadWithFallback(id, img);
+    img.loading = "lazy";
+
+    loadFallback(id, img);
 
     const label = document.createElement("span");
     label.textContent = id;
@@ -531,21 +535,20 @@ function updateCart() {
 }
 
 /* =========================
-   📥 DOWNLOAD SINGLE
+   📦 DOWNLOAD SINGLE
 ========================= */
 
 async function downloadSingle(id) {
   const zip = new JSZip();
 
   for (let v of VARIANTS) {
-    const url = imgPath("images/parts", id, v);
+    const url = getPath("images/parts", id, v);
 
     try {
-      const res = await fetch(url, { method: "HEAD" });
-      if (res.ok) {
-        const file = await fetch(url);
-        zip.file(`${id}${v}.png`, await file.blob());
-      }
+      const res = await fetch(url);
+      if (!res.ok) continue;
+
+      zip.file(`${id}${v}.png`, await res.blob());
     } catch {}
   }
 
@@ -566,7 +569,7 @@ async function downloadSuit() {
 
   for (let id of currentSuit.parts) {
     for (let v of VARIANTS) {
-      const url = imgPath("images/parts", id, v);
+      const url = getPath("images/parts", id, v);
 
       try {
         const res = await fetch(url);
@@ -594,7 +597,7 @@ async function downloadCart() {
 
   for (let id of cart.keys()) {
     for (let v of VARIANTS) {
-      const url = imgPath("images/parts", id, v);
+      const url = getPath("images/parts", id, v);
 
       try {
         const res = await fetch(url);
@@ -614,7 +617,7 @@ async function downloadCart() {
 }
 
 /* =========================
-   🪟 UI HELPERS
+   🪟 UI
 ========================= */
 
 function closeModal() {
