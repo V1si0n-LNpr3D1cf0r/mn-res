@@ -370,6 +370,7 @@ function displaySuits(list) {
 
     const primary = getPath("images/suits", s.id);
 
+    // ✅ PRECHECK IMAGE FIRST (prevents empty cards)
     const testImg = new Image();
 
     testImg.onload = () => {
@@ -386,6 +387,7 @@ function displaySuits(list) {
       };
 
       fallbackImg.onerror = () => {
+        // ❌ no valid image → DO NOT SHOW CARD
       };
 
       fallbackImg.src = fallback;
@@ -394,7 +396,7 @@ function displaySuits(list) {
     testImg.src = primary;
   });
 
-  function createCard(s, imgSrc) {
+function createCard(s, imgSrc) {
     const card = document.createElement("div");
     card.className = "suit-card";
 
@@ -418,9 +420,8 @@ function displaySuits(list) {
 
     card.onclick = () => openSuit(s);
 
-    fragment.appendChild(card);
-
-    grid.appendChild(fragment);
+    // Append directly to the grid since this is called asynchronously
+    grid.appendChild(card);
   }
 }
 
@@ -444,6 +445,10 @@ function searchSuit() {
   });
 
   displaySuits(filtered);
+}
+
+function filterSuit() {
+  searchSuit();
 }
 
 /* =========================
