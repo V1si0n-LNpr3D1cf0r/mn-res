@@ -481,7 +481,7 @@ function openSuit(suit) {
 
     btns.innerHTML = `
       <button class="small-btn" onclick="addToCart('${id}');event.stopPropagation();">Add</button>
-      <button class="small-btn" onclick="downloadSingle('${id}');event.stopPropagation();">DL</button>
+      <button class="small-btn" onclick="downloadSingle('${id}');event.stopPropagation();">Download</button>
     `;
 
     part.appendChild(img);
@@ -528,31 +528,28 @@ function removeFromCart(id) {
 
 function updateCart() {
   document.getElementById("cartCount").textContent = cart.size;
-
   const container = document.getElementById("cartItems");
   container.innerHTML = "";
 
-  cart.forEach((_, id) => {
+  cart.forEach((_, fullId) => {
     const div = document.createElement("div");
     div.className = "cart-item";
 
     const img = document.createElement("img");
-    img.loading = "lazy";
-
-    loadFallback(id, img);
+    // fullId already contains the variant if it was added from the new modal
+    img.src = `${BASE}/images/parts/${fullId}.png`; 
 
     const label = document.createElement("span");
-    label.textContent = id;
+    label.textContent = fullId;
 
     const trash = document.createElement("span");
     trash.textContent = "🗑️";
     trash.className = "trash";
-    trash.onclick = () => removeFromCart(id);
+    trash.onclick = () => removeFromCart(fullId);
 
     div.appendChild(img);
     div.appendChild(label);
     div.appendChild(trash);
-
     container.appendChild(div);
   });
 }
@@ -637,6 +634,20 @@ async function downloadCart() {
     a.download = "LN_cart.zip";
     a.click();
   });
+}
+
+async function downloadDirect(url, filename) {
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  } catch (e) {
+    alert("Download failed.");
+  }
 }
 
 /* =========================
