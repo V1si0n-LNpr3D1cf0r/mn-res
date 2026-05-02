@@ -330,10 +330,7 @@ const VARIANTS = [
 
 // helper path builder
 function getPath(type, id, v = "") {
-  if (MODE === "github") {
-    return `${BASE}${type}/${id}${v}.png`;
-  }
-  return `${type}/${id}${v}.png`;
+  return `${BASE}/${type}/${id}${v}.png`;
 }
 
 /* =========================
@@ -360,72 +357,70 @@ fetch("data.json")
   });
 
 /* =========================
-   🖼 SUIT GRID (FIXED)
+    🖼 SUIT GRID (FIXED)
 ========================= */
-
 function displaySuits(list) {
   const grid = document.getElementById("suitGrid");
   grid.innerHTML = "";
 
+  const fragment = document.createDocumentFragment();
+
   list.forEach(s => {
     const card = document.createElement("div");
     card.className = "suit-card";
+    
+    // 1. FIX: Access the name from the names object (names.en or names.cn)
+    const suitName = s.names?.en || s.names?.cn || s.name || "Unnamed Suit";
 
     const img = document.createElement("img");
     img.loading = "lazy";
 
-    // direct assign (NO preload blocking)
-    img.src = getPath("images/suits", s.id);
+    const primary = getPath("images/suits", s.id);
+    img.src = primary;
 
-    // fallback (important)
+    // 2. FIX: Chain fallbacks and HIDE if both fail
     img.onerror = () => {
-      img.onerror = null;
+      // First attempt failed: Try the "-1" variant
+      img.onerror = () => {
+        // Second attempt failed: This suit has NO image, so hide the whole card
+        card.style.display = "none";
+      };
       img.src = getPath("images/suits", s.id, "-1");
     };
 
     const title = document.createElement("div");
-    title.textContent = s.name;
+    title.textContent = suitName;
 
     card.appendChild(img);
     card.appendChild(title);
-
     card.onclick = () => openSuit(s);
 
-    grid.appendChild(card);
+    fragment.appendChild(card);
   });
-}
 
-/* =========================
-   🔎 SEARCH + FILTER
-========================= */
+  grid.appendChild(fragment);
+}
 
 function searchSuit() {
   const q = document.getElementById("search").value.trim().toLowerCase();
   const f = document.getElementById("filter").value;
 
-  let filtered = suits;
+  const filtered = suits.filter(s => {
+    // 1. Check Category
+    if (f !== "all" && s.category !== f) return false;
 
-  if (f !== "all") {
-    filtered = filtered.filter(s => s.category === f);
-  }
+    // 2. Check Search Query
+    if (q === "") return true;
+    
+    // Search by ID
+    if (!isNaN(q) && s.id.toString().includes(q)) return true;
 
-  if (q !== "") {
-    filtered = filtered.filter(s => {
-      if (!isNaN(q)) return s.id.toString().includes(q);
-
-      const names = Object.values(s.names || {}).join(" ").toLowerCase();
-      return (
-        (s.name || "").toLowerCase().includes(q) ||
-        names.includes(q)
-      );
-    });
-  }
+    // NEW: Search through all name fields (en, cn, jp, etc.)
+    const nameValues = Object.values(s.names || {}).map(val => val.toLowerCase());
+    return nameValues.some(name => name.includes(q));
+  });
 
   displaySuits(filtered);
-}
-
-function filterSuit() {
-  searchSuit();
 }
 
 /* =========================
@@ -628,6 +623,7 @@ function toggleCart() {
   const p = document.getElementById("cartPanel");
   p.style.display = p.style.display === "block" ? "none" : "block";
 }
+
 </script>
 
 </body>
