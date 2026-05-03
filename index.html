@@ -91,8 +91,9 @@ input:focus, select:focus {
 /* ===== SUIT GRID ===== */
 .suit-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 25px;
+  /* Slightly smaller minmax so mobile fits at least 2 columns cleanly */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
   padding: 25px;
 }
 
@@ -105,41 +106,46 @@ input:focus, select:focus {
   text-align: center;
   cursor: pointer;
   backdrop-filter: blur(12px);
-  transition: all 0.4s ease;
-  animation: float 6s ease-in-out infinite;
+  transition: all 0.2s ease;
+  
+  /* Sorting additions: Default to bottom and slightly faded */
+  order: 100;
+  opacity: 0.6;
 }
 
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+/* Sorting additions: When image is found, push to top */
+.suit-card.has-image {
+  order: 1;
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .suit-card:hover {
   background: rgba(255, 255, 255, 0.8);
-  transform: scale(1.05) rotate(1deg);
+  transform: scale(1.03);
   border-color: var(--nikki-pink);
 }
 
 .suit-card img {
   width: 100%;
-  height: 220px;
+  height: 200px;
   object-fit: contain;
   border-radius: 18px;
   margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.3); /* Placeholder color until load */
 }
 
 /* ===== MODAL (Glassmorphism) ===== */
 .modal {
-  display: none; /* Hidden by default */
+  display: none;
   position: fixed; 
-  z-index: 1000; /* Sits on top of everything */
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255, 182, 193, 0.3); /* Soft pink tint */
-  backdrop-filter: blur(10px); /* The "Glass" effect */
+  background: rgba(255, 182, 193, 0.3);
+  backdrop-filter: blur(10px);
   justify-content: center;
   align-items: center;
 }
@@ -150,27 +156,17 @@ input:focus, select:focus {
   border-radius: 30px;
   width: 90%;
   max-width: 900px;
-  max-height: 85vh; /* Prevents it from going off-screen */
-  overflow-y: auto; /* Scrollable if there are many parts */
+  max-height: 85vh;
+  overflow-y: auto;
   position: relative;
   border: 2px solid white;
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
 
-/* ===== PART CARDS ===== */
 /* ===== PARTS GRID (Inside Modal) ===== */
 .parts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
-}
-
-/* ===== PART CARDS ===== */
-/* ===== PARTS GRID (Inside Modal) ===== */
-.parts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 15px;
   margin-top: 20px;
 }
@@ -183,7 +179,7 @@ input:focus, select:focus {
   border: 1px solid #ffe4f0;
   transition: transform 0.2s;
   display: flex;
-  flex-direction: column; /* Stacks the image, text, and buttons vertically */
+  flex-direction: column;
   align-items: center;
 }
 
@@ -195,8 +191,8 @@ input:focus, select:focus {
 
 .part-card img {
   width: 100%;
-  height: 130px; /* This makes every single preview exactly the same height! */
-  object-fit: contain; /* Scales the image down to fit the box perfectly */
+  height: 120px;
+  object-fit: contain;
   background: radial-gradient(#fff, #ffeef6);
   border-radius: 15px;
   margin-bottom: 8px;
@@ -210,33 +206,25 @@ input:focus, select:focus {
   justify-content: center;
 }
 
-/* Keeps the buttons neat and centered */
-.btn-group {
-  display: flex;
-  gap: 5px;
-  width: 100%;
-  justify-content: center;
-}
-
 /* ===== CART PANEL (Pinned to Right) ===== */
 .cart-panel {
-  display: none; /* Controlled by toggleCart() */
-  position: fixed; /* Keeps it locked to the screen */
+  display: none;
+  position: fixed;
   right: 0;
   top: 0;
-  width: 320px;
+  width: 100%;
+  max-width: 320px; /* Adapts to smaller mobile screens natively */
   height: 100%;
-  background: rgba(255, 255, 255, 0.98); /* Slightly more solid for readability */
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   border-left: 3px solid var(--nikki-pink);
   box-shadow: -10px 0 30px rgba(0,0,0,0.1);
   padding: 25px;
-  z-index: 2000; /* Ensures it stays above the suit grid and modal */
+  z-index: 2000;
   box-sizing: border-box;
-  overflow-y: auto; /* Allows scrolling if you have many items */
+  overflow-y: auto;
 }
 
-/* Updated Cart Item for consistency */
 .cart-item {
   display: flex;
   align-items: center;
@@ -252,6 +240,12 @@ input:focus, select:focus {
   background: radial-gradient(#fff, #ffeef6);
   border-radius: 12px;
   flex-shrink: 0;
+}
+
+.trash {
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: auto; /* Pushes trash to the right */
 }
     </style>
 </head>
@@ -313,31 +307,52 @@ let cart = new Map();
 let currentSuit = null;
 
 const BASE_USER = "https://raw.githubusercontent.com/V1si0n-LNpr3D1cf0r";
-
-// 📝 Add your repository names here in order of priority!
 const REPOS = ["mn-res-b1", "mn-res-b2", "mn-res-b3"]; 
+const VARIANTS = ["-1", "-2", "-3", "-4", "-5", "-6", "-7", "-8", "-9", "-13", "-101", "-201", "-301", "-701", "-901"];
 
-const VARIANTS = ["", "-1", "-2", "-3", "-4", "-5", "-6", "-7", "-8", "-9", "-13", "-101", "-201", "-301", "-701", "-901"];
+/* =========================
+   👀 LAZY LOADING OBSERVER (With Sorting)
+========================= */
+const imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const img = entry.target;
+            const suitId = img.dataset.id;
+            const card = img.closest('.suit-card'); // Grab the parent card
+            
+            // Only find the image once it gets close to view
+            findImage(suitId, true, "", (foundUrl) => {
+                img.src = foundUrl;
+                img.style.opacity = 1;
+                
+                // If an image is successfully loaded, push the card to the top
+                if (card) {
+                    card.classList.add('has-image');
+                }
+            });
+            
+            observer.unobserve(img); // Stop watching it once loaded
+        }
+    });
+}, { rootMargin: "400px" }); // Increased rootMargin to 400px so cards sort before hitting the screen
 
 /* =========================
    🔍 SMART FINDER
 ========================= */
-
-// This function tries every repo in the REPOS list until it finds the image
 function findImage(id, isSuit, variant, callback) {
     const folder = isSuit ? "suits" : "parts";
     let repoIndex = 0;
 
     function tryNextRepo() {
-        if (repoIndex >= REPOS.length) return; // Not found anywhere
+        if (repoIndex >= REPOS.length) return;
 
         const url = `${BASE_USER}/${REPOS[repoIndex]}/main/images/${folder}/${id}${variant}.png`;
         const img = new Image();
         
-        img.onload = () => callback(url); // Found it!
+        img.onload = () => callback(url);
         img.onerror = () => {
             repoIndex++;
-            tryNextRepo(); // Try the next bucket
+            tryNextRepo();
         };
         img.src = url;
     }
@@ -347,7 +362,6 @@ function findImage(id, isSuit, variant, callback) {
 /* =========================
    📦 LOAD DATA
 ========================= */
-
 fetch("data.json")
     .then(r => r.json())
     .then(data => {
@@ -360,55 +374,48 @@ fetch("data.json")
 /* =========================
     🖼 SUIT GRID
 ========================= */
-
 function displaySuits(list) {
     const grid = document.getElementById("suitGrid");
     grid.innerHTML = "";
 
     list.forEach(s => {
         if (!s || !s.id) return;
-        
-        // Find the suit cover image in any bucket
-        findImage(s.id, true, "", (foundUrl) => {
-            createCard(s, foundUrl);
-        });
+        createCard(s);
     });
 }
 
-/* =========================
-    🖼 SUIT GRID (Fixed Name Logic)
-========================= */
-
-function createCard(s, imgSrc) {
+function createCard(s) {
     const grid = document.getElementById("suitGrid");
     const card = document.createElement("div");
     card.className = "suit-card";
 
-    // This checks every possible place a name could be hiding!
     const name = s.names?.en || s.names?.cn || s.names?.jp || s.name || s.SuitName || "Unnamed Suit";
 
+    // Set up card with a placeholder image, attach the ID via data-id
     card.innerHTML = `
-        <img src="${imgSrc}" loading="lazy">
-        <div style="margin-top:8px; font-weight:bold;">${name}</div>
+        <img data-id="${s.id}" style="opacity: 0; transition: opacity 0.4s ease-in-out;" alt="${name}">
+        <div style="margin-top:8px; font-weight:bold; font-size: 14px;">${name}</div>
     `;
     card.onclick = () => openSuit(s);
     grid.appendChild(card);
+
+    // Tell our observer to watch this newly created image box
+    const imgElement = card.querySelector('img');
+    imageObserver.observe(imgElement);
 }
 
 /* =========================
-   🧾 OPEN SUIT (Fixed Name Logic)
+   🧾 OPEN SUIT
 ========================= */
-
 function openSuit(suit) {
     currentSuit = suit;
     document.getElementById("modal").style.display = "flex";
     
-    // Check all name variants here too!
     const suitName = suit.names?.en || suit.names?.cn || suit.names?.jp || suit.name || suit.SuitName || "Suit Parts";
     document.getElementById("suitTitle").textContent = suitName;
 
     const grid = document.getElementById("partsGrid");
-    grid.innerHTML = "Nikki's Scanning Wardrobe...";
+    grid.innerHTML = "<div style='grid-column: 1 / -1; text-align: center; color: var(--nikki-pink); font-weight: bold;'>Nikki's Scanning Wardrobe...</div>";
 
     let loadedAny = false;
 
@@ -423,10 +430,10 @@ function openSuit(suit) {
                 
                 partCard.innerHTML = `
                     <img src="${foundUrl}" loading="lazy">
-                    <div style="font-size:10px; margin:4px 0;">${label}</div>
+                    <div style="font-size:11px; margin:4px 0; font-weight: bold;">${label}</div>
                     <div class="btn-group">
-                        <button class="small-btn" onclick="addToCart('${label}', '${foundUrl}')">Add</button>
-                        <button class="small-btn" onclick="downloadDirect('${foundUrl}', '${label}.png')">DL</button>
+                        <button class="small-btn" style="padding: 6px 12px; font-size: 11px;" onclick="addToCart('${label}', '${foundUrl}')">Add</button>
+                        <button class="small-btn" style="padding: 6px 12px; font-size: 11px;" onclick="downloadDirect('${foundUrl}', '${label}.png')">DL</button>
                     </div>
                 `;
                 grid.appendChild(partCard);
@@ -434,13 +441,14 @@ function openSuit(suit) {
         });
     });
 
-    setTimeout(() => { if (!loadedAny) grid.innerHTML = "Nikki got distracted... (Reopen me again to see clothing parts!)"; }, 3000);
+    setTimeout(() => { 
+        if (!loadedAny) grid.innerHTML = "<div style='grid-column: 1 / -1; text-align: center;'>Nikki got distracted... (Reopen me again to see clothing parts!)</div>"; 
+    }, 4000);
 }
 
 /* =========================
    🛒 CART LOGIC
 ========================= */
-
 function addToCart(id, url) {
     cart.set(id, url);
     saveCart();
@@ -475,7 +483,7 @@ function updateCartUI() {
         item.className = "cart-item";
         item.innerHTML = `
             <img src="${url}">
-            <span style="font-size:12px;">${id}</span>
+            <span style="font-size:13px; font-weight: bold;">${id}</span>
             <span class="trash" onclick="removeFromCart('${id}')">🗑️</span>
         `;
         container.appendChild(item);
@@ -485,7 +493,6 @@ function updateCartUI() {
 /* =========================
    📦 DOWNLOADS
 ========================= */
-
 async function downloadDirect(url, filename) {
     const res = await fetch(url);
     const blob = await res.blob();
@@ -511,7 +518,7 @@ async function downloadSuit() {
     zip.generateAsync({type:"blob"}).then(content => {
         const a = document.createElement("a");
         a.href = URL.createObjectURL(content);
-        a.download = `${currentSuit.name}.zip`;
+        a.download = `${currentSuit.name || 'Suit'}.zip`;
         a.click();
     });
 }
@@ -537,19 +544,17 @@ async function downloadCart() {
 /* =========================
    UI HELPERS
 ========================= */
-
 function searchSuit() {
     const q = document.getElementById("search").value.toLowerCase();
     
     const filtered = suits.filter(s => {
-        // Get all possible name values into one string to search against
         const allNames = [
             s.name, 
             s.SuitName, 
             ...(s.names ? Object.values(s.names) : [])
         ].join(" ").toLowerCase();
 
-        return allNames.includes(q) || s.id.toString().includes(q);
+        return allNames.includes(q) || (s.id && s.id.toString().includes(q));
     });
     
     displaySuits(filtered);
@@ -557,7 +562,7 @@ function searchSuit() {
 
 function filterSuit() {
     const f = document.getElementById("filter").value;
-    const filtered = f === "all" ? suits : suits.filter(s => s.category === f);
+    const filtered = f === "All" ? suits : suits.filter(s => s.category === f);
     displaySuits(filtered);
 }
 
