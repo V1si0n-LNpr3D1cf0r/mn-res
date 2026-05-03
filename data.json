@@ -2862,6 +2862,30 @@
     ]
   },
     {
+    "id": 763,
+    "names": {
+      "en": "Fire Tiger of Tail",
+      "cn": "尾火虎",
+      "jp": "尾火虎",
+      "kr": "미화호",
+      "vn": "Vĩ Hỏa Hổ",
+      "tw": "尾火虎"
+    },
+    "cover": "images/suits/763.png",
+    "category": "Stars",
+    "parts": [
+      10932,
+      20768,
+      30390,
+      70835,
+      81517,
+      81518,
+      81519,
+      81520,
+      90074
+    ]
+  },
+    {
     "id": 764,
     "names": {
       "en": "Earth Bat of Girl",
