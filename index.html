@@ -7,7 +7,6 @@
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/V1si0n-LNpr3D1cf0r/mn-res/main/head_12.png">
     
     <style>
-/* ===== THEMES & VARIABLES ===== */
 :root {
   --nikki-pink: #ff85ba;
   --soft-blush: #ffe4f0;
@@ -254,11 +253,25 @@ input, select {
     margin-right: 35px; /* Leave room for the sticky Close button */
   }
 }
+
+.mobile-notice {
+    font-size: 12px;           /* Small and clean */
+    font-family: sans-serif;   /* Standard font for readability */
+    font-weight: normal;       /* Not bold like the title */
+    color: #5d4157;            /* Matches your text-main variable */
+    opacity: 0.8;              /* Softens the look */
+    margin-top: 8px;           /* Space between title and notice */
+    display: block;            /* Forces it to the next line */
+    letter-spacing: 0.5px;     /* Easier to read */
+}
     </style>
 </head>
 <body>
 
-<header>HDA Archives</header>
+<header>
+    HDA Archives
+    <div class="mobile-notice">Best viewed using "Desktop Site" on mobile devices</div>
+</header>
 
 <div class="topbar">
     <input type="text" id="search" placeholder="Search suit..." oninput="searchSuit()">
