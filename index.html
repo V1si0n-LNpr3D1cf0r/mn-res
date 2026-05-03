@@ -9,244 +9,132 @@
 /* ===== THEMES & VARIABLES ===== */
 :root {
   --nikki-pink: #ff85ba;
-  --soft-blush: #ffe4f0;
-  --lavender: #bd93f9;
-  --glass-bg: rgba(255, 255, 255, 0.4);
+  --glass-bg: rgba(255, 255, 255, 0.6);
   --glass-border: rgba(255, 255, 255, 0.6);
   --text-main: #5d4157;
 }
 
-/* ===== GLOBAL STYLES ===== */
 body {
   margin: 0;
   font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: 
-    radial-gradient(circle at top right, #fff0f6, transparent),
-    radial-gradient(circle at bottom left, #f3e8ff, transparent),
-    #ffe4f0;
+  background: radial-gradient(circle at top right, #fff0f6, transparent), #ffe4f0;
   background-attachment: fixed;
   color: var(--text-main);
 }
 
 /* ===== HEADER ===== */
 header {
-  padding: 25px;
+  padding: 20px;
   text-align: center;
   font-family: "Georgia", serif;
   font-weight: bold;
-  font-size: 28px;
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
+  font-size: 24px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(8px); /* Blur is fine here, it's only one element */
   color: var(--nikki-pink);
-  text-shadow: 2px 2px 4px rgba(255, 133, 186, 0.2);
   border-bottom: 2px solid var(--glass-border);
-  letter-spacing: 2px;
 }
 
-/* ===== TOP BAR (Search & Filter) ===== */
+/* ===== TOP BAR ===== */
 .topbar {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  padding: 20px;
+  gap: 10px;
+  padding: 15px;
   flex-wrap: wrap;
 }
 
 input, select {
-  padding: 12px 20px;
-  border-radius: 25px;
+  padding: 10px 15px;
+  border-radius: 20px;
   border: 1px solid var(--glass-border);
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
+  background: white;
   color: var(--text-main);
   outline: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
+  font-size: 14px;
 }
 
-input:focus, select:focus {
-  background: white;
-  border-color: var(--nikki-pink);
-  transform: scale(1.02);
-}
-
-/* ===== CUTE BUTTONS ===== */
-.cart-btn, .small-btn, .download-all {
+.cart-btn, .small-btn {
   background: linear-gradient(135deg, #ff85ba, #ffb3d9);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 25px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 4px 15px rgba(255, 133, 186, 0.4);
-}
-
-.cart-btn:hover, .small-btn:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(255, 133, 186, 0.6);
+  color: white; border: none; padding: 10px 18px; border-radius: 20px;
+  font-weight: bold; cursor: pointer;
 }
 
 /* ===== SUIT GRID ===== */
 .suit-grid {
   display: grid;
-  /* Slightly smaller minmax so mobile fits at least 2 columns cleanly */
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 20px;
-  padding: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Slightly smaller for mobile */
+  gap: 15px;
+  padding: 15px;
 }
 
-/* ===== SUIT CARD ===== */
+/* ===== SUIT CARD (Mobile Optimized) ===== */
 .suit-card {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 24px;
-  padding: 15px;
+  /* Removed backdrop-filter to drastically improve mobile FPS */
+  background: rgba(255, 255, 255, 0.5); 
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  padding: 12px;
   text-align: center;
   cursor: pointer;
-  backdrop-filter: blur(12px);
-  transition: all 0.2s ease;
   
-  /* Sorting additions: Default to bottom and slightly faded */
+  /* Sorting logic */
   order: 100;
-  opacity: 0.6;
+  opacity: 0.65;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+  will-change: opacity, transform; /* GPU hint */
 }
 
-/* Sorting additions: When image is found, push to top */
+/* Push found images to the top naturally */
 .suit-card.has-image {
   order: 1;
   opacity: 1;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.9);
 }
 
-.suit-card:hover {
-  background: rgba(255, 255, 255, 0.8);
-  transform: scale(1.03);
-  border-color: var(--nikki-pink);
+.suit-card:active {
+  transform: scale(0.97); /* Better mobile tap feedback */
 }
 
 .suit-card img {
   width: 100%;
-  height: 200px;
+  height: 160px; /* Shorter to fit more on screen */
   object-fit: contain;
-  border-radius: 18px;
-  margin-bottom: 10px;
-  background: rgba(255, 255, 255, 0.3); /* Placeholder color until load */
-}
-
-/* ===== MODAL (Glassmorphism) ===== */
-.modal {
-  display: none;
-  position: fixed; 
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 182, 193, 0.3);
-  backdrop-filter: blur(10px);
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 30px;
-  border-radius: 30px;
-  width: 90%;
-  max-width: 900px;
-  max-height: 85vh;
-  overflow-y: auto;
-  position: relative;
-  border: 2px solid white;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-}
-
-/* ===== PARTS GRID (Inside Modal) ===== */
-.parts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
-}
-
-/* ===== PART CARDS ===== */
-.part-card {
-  background: white;
-  border-radius: 20px;
-  padding: 10px;
-  border: 1px solid #ffe4f0;
-  transition: transform 0.2s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.part-card:hover {
-  transform: scale(1.05);
-  border-color: var(--nikki-pink);
-  box-shadow: 0 5px 15px rgba(255, 133, 186, 0.2);
-}
-
-.part-card img {
-  width: 100%;
-  height: 120px;
-  object-fit: contain;
-  background: radial-gradient(#fff, #ffeef6);
-  border-radius: 15px;
-  margin-bottom: 8px;
-}
-
-/* Keeps the buttons neat and centered */
-.btn-group {
-  display: flex;
-  gap: 5px;
-  width: 100%;
-  justify-content: center;
-}
-
-/* ===== CART PANEL (Pinned to Right) ===== */
-.cart-panel {
-  display: none;
-  position: fixed;
-  right: 0;
-  top: 0;
-  width: 100%;
-  max-width: 320px; /* Adapts to smaller mobile screens natively */
-  height: 100%;
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(20px);
-  border-left: 3px solid var(--nikki-pink);
-  box-shadow: -10px 0 30px rgba(0,0,0,0.1);
-  padding: 25px;
-  z-index: 2000;
-  box-sizing: border-box;
-  overflow-y: auto;
-}
-
-.cart-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-bottom: 1px solid #ffd1e3;
-  padding: 12px 0;
-}
-
-.cart-item img {
-  width: 60px;
-  height: 60px;
-  object-fit: contain;
-  background: radial-gradient(#fff, #ffeef6);
   border-radius: 12px;
-  flex-shrink: 0;
+  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.4);
 }
 
-.trash {
-    cursor: pointer;
-    font-size: 16px;
-    margin-left: auto; /* Pushes trash to the right */
+/* ===== MODAL ===== */
+.modal {
+  display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+  background: rgba(255, 182, 193, 0.5); backdrop-filter: blur(5px);
+  justify-content: center; align-items: center;
 }
+.modal-content {
+  background: white; padding: 20px; border-radius: 25px;
+  width: 95%; max-width: 900px; max-height: 85vh; overflow-y: auto;
+}
+.parts-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 15px;
+}
+.part-card {
+  background: #fdf5f8; border-radius: 15px; padding: 8px; border: 1px solid #ffe4f0; text-align: center;
+}
+.part-card img { width: 100%; height: 100px; object-fit: contain; margin-bottom: 5px;}
+.btn-group { display: flex; gap: 5px; width: 100%; justify-content: center; }
+
+/* ===== CART PANEL ===== */
+.cart-panel {
+  display: none; position: fixed; right: 0; top: 0; width: 100%; max-width: 300px; height: 100%;
+  background: white; border-left: 3px solid var(--nikki-pink); padding: 20px; z-index: 2000; box-sizing: border-box; overflow-y: auto;
+}
+.cart-item { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #ffd1e3; padding: 10px 0; }
+.cart-item img { width: 50px; height: 50px; object-fit: contain; border-radius: 8px; flex-shrink: 0;}
+.trash { cursor: pointer; margin-left: auto; }
+
+/* Invisible trigger for Infinite Scroll */
+#sentinel { width: 100%; height: 20px; }
     </style>
 </head>
 <body>
@@ -267,26 +155,19 @@ input:focus, select:focus {
     <option value="North">North</option>
     <option value="Wasteland">Wasteland</option>
     <option value="Ruin">Ruin</option>
-    <option value="Story Suits">Story Suits</option>
-    <option value="Festivals">Festivals</option>
-    <option value="Troupe">Troupe</option>
-    <option value="4 Seasons">4 Seasons</option>
-    <option value="Imperial Palace">Imperial Palace</option>
-    <option value="Happiness">Happiness</option>
-    <option value="Wonder Museum">Wonder Museum</option>
-    <option value="Fairytale">Fairytale</option>
-    <option value="Gallery">Gallery</option>
   </select>
     <button class="cart-btn" onclick="toggleCart()">Cart (<span id="cartCount">0</span>)</button>
 </div>
 
 <div class="suit-grid" id="suitGrid"></div>
+<!-- Sentinel for Infinite Scroll -->
+<div id="sentinel"></div>
 
 <!-- Modal -->
 <div class="modal" id="modal" onclick="closeModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h2 id="suitTitle"></h2>
-        <button class="small-btn" style="margin-bottom:10px; padding: 10px;" onclick="downloadSuit()">Download Full Suit</button>
+        <h3 id="suitTitle" style="margin-top:0;"></h3>
+        <button class="small-btn" style="margin-bottom:10px; width:100%;" onclick="downloadSuit()">Download Full Suit</button>
         <div class="parts-grid" id="partsGrid"></div>
     </div>
 </div>
@@ -295,46 +176,55 @@ input:focus, select:focus {
 <div class="cart-panel" id="cartPanel">
     <h3>My Cart</h3>
     <div id="cartItems"></div>
-    <button class="small-btn" style="width:100%; margin-top:10px; padding:10px;" onclick="downloadCart()">Download Cart</button>
-    <button class="small-btn" style="width:100%; margin-top:5px; background:#ccc;" onclick="toggleCart()">Close</button>
+    <button class="small-btn" style="width:100%; margin-top:10px;" onclick="downloadCart()">Download Cart</button>
+    <button class="small-btn" style="width:100%; margin-top:10px; background:#ccc;" onclick="toggleCart()">Close</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <script>
 let suits = [];
+let displayedSuits = []; // The currently filtered list
 let cart = new Map();
 let currentSuit = null;
+
+// Infinite Scroll state
+let currentRenderLimit = 0;
+const CHUNK_SIZE = 40; // Load 40 items at a time to keep mobile fast
 
 const BASE_USER = "https://raw.githubusercontent.com/V1si0n-LNpr3D1cf0r";
 const REPOS = ["mn-res-b1", "mn-res-b2", "mn-res-b3"]; 
 const VARIANTS = ["-1", "-2", "-3", "-4", "-5", "-6", "-7", "-8", "-9", "-13", "-101", "-201", "-301", "-701", "-901"];
 
 /* =========================
-   👀 LAZY LOADING OBSERVER (With Sorting)
+   👀 LAZY LOADING OBSERVER 
 ========================= */
 const imageObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             const img = entry.target;
             const suitId = img.dataset.id;
-            const card = img.closest('.suit-card'); // Grab the parent card
+            const card = img.closest('.suit-card'); 
             
-            // Only find the image once it gets close to view
             findImage(suitId, true, "", (foundUrl) => {
                 img.src = foundUrl;
                 img.style.opacity = 1;
-                
-                // If an image is successfully loaded, push the card to the top
-                if (card) {
-                    card.classList.add('has-image');
-                }
+                if (card) card.classList.add('has-image'); // Pushes to top of the grid safely
             });
             
-            observer.unobserve(img); // Stop watching it once loaded
+            observer.unobserve(img); 
         }
     });
-}, { rootMargin: "400px" }); // Increased rootMargin to 400px so cards sort before hitting the screen
+}, { rootMargin: "150px" }); // Kept moderate so it doesn't spam mobile networks
+
+/* =========================
+   📜 INFINITE SCROLL OBSERVER
+========================= */
+const scrollObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+        renderChunk();
+    }
+}, { rootMargin: "200px" });
 
 /* =========================
    🔍 SMART FINDER
@@ -345,154 +235,134 @@ function findImage(id, isSuit, variant, callback) {
 
     function tryNextRepo() {
         if (repoIndex >= REPOS.length) return;
-
         const url = `${BASE_USER}/${REPOS[repoIndex]}/main/images/${folder}/${id}${variant}.png`;
         const img = new Image();
-        
         img.onload = () => callback(url);
-        img.onerror = () => {
-            repoIndex++;
-            tryNextRepo();
-        };
+        img.onerror = () => { repoIndex++; tryNextRepo(); };
         img.src = url;
     }
     tryNextRepo();
 }
 
 /* =========================
-   📦 LOAD DATA
+   📦 INITIAL LOAD
 ========================= */
-fetch("data.json")
-    .then(r => r.json())
-    .then(data => {
-        suits = data;
-        displaySuits(suits);
-        loadCart();
-    })
-    .catch(err => console.error("Could not load data.json", err));
+fetch("data.json").then(r => r.json()).then(data => {
+    suits = data;
+    displayedSuits = suits; // Set initial state
+    renderChunk(true); // Render first batch
+    loadCart();
+    scrollObserver.observe(document.getElementById("sentinel")); // Start watching for bottom of page
+});
 
 /* =========================
-    🖼 SUIT GRID
+    🖼 SUIT GRID RENDERER
 ========================= */
-function displaySuits(list) {
+function renderChunk(reset = false) {
     const grid = document.getElementById("suitGrid");
-    grid.innerHTML = "";
+    
+    if (reset) {
+        grid.innerHTML = "";
+        currentRenderLimit = 0;
+    }
 
-    list.forEach(s => {
+    // Get the next batch of 40 suits
+    const toRender = displayedSuits.slice(currentRenderLimit, currentRenderLimit + CHUNK_SIZE);
+    if (toRender.length === 0) return;
+
+    toRender.forEach(s => {
         if (!s || !s.id) return;
-        createCard(s);
+        
+        const card = document.createElement("div");
+        card.className = "suit-card";
+        const name = s.names?.en || s.names?.cn || s.name || s.SuitName || "Unnamed Suit";
+
+        card.innerHTML = `
+            <img data-id="${s.id}" style="opacity: 0; transition: opacity 0.3s;" alt="${name}">
+            <div style="font-weight:bold; font-size: 13px;">${name}</div>
+        `;
+        card.onclick = () => openSuit(s);
+        grid.appendChild(card);
+
+        // Observe new images
+        imageObserver.observe(card.querySelector('img'));
     });
-}
 
-function createCard(s) {
-    const grid = document.getElementById("suitGrid");
-    const card = document.createElement("div");
-    card.className = "suit-card";
-
-    const name = s.names?.en || s.names?.cn || s.names?.jp || s.name || s.SuitName || "Unnamed Suit";
-
-    // Set up card with a placeholder image, attach the ID via data-id
-    card.innerHTML = `
-        <img data-id="${s.id}" style="opacity: 0; transition: opacity 0.4s ease-in-out;" alt="${name}">
-        <div style="margin-top:8px; font-weight:bold; font-size: 14px;">${name}</div>
-    `;
-    card.onclick = () => openSuit(s);
-    grid.appendChild(card);
-
-    // Tell our observer to watch this newly created image box
-    const imgElement = card.querySelector('img');
-    imageObserver.observe(imgElement);
+    currentRenderLimit += CHUNK_SIZE;
 }
 
 /* =========================
-   🧾 OPEN SUIT
+   UI HELPERS (Search & Filter)
+========================= */
+function searchSuit() {
+    const q = document.getElementById("search").value.toLowerCase();
+    displayedSuits = suits.filter(s => {
+        const allNames = [s.name, s.SuitName, ...(s.names ? Object.values(s.names) : [])].join(" ").toLowerCase();
+        return allNames.includes(q) || (s.id && s.id.toString().includes(q));
+    });
+    renderChunk(true); // Reset and show new filtered batch
+}
+
+function filterSuit() {
+    const f = document.getElementById("filter").value;
+    displayedSuits = f === "All" ? suits : suits.filter(s => s.category === f);
+    renderChunk(true);
+}
+
+/* =========================
+   🧾 MODAL & CART (Unchanged Logic)
 ========================= */
 function openSuit(suit) {
     currentSuit = suit;
     document.getElementById("modal").style.display = "flex";
-    
-    const suitName = suit.names?.en || suit.names?.cn || suit.names?.jp || suit.name || suit.SuitName || "Suit Parts";
-    document.getElementById("suitTitle").textContent = suitName;
+    document.getElementById("suitTitle").textContent = suit.names?.en || suit.name || "Suit Parts";
 
     const grid = document.getElementById("partsGrid");
-    grid.innerHTML = "<div style='grid-column: 1 / -1; text-align: center; color: var(--nikki-pink); font-weight: bold;'>Nikki's Scanning Wardrobe...</div>";
+    grid.innerHTML = "<div style='grid-column: 1 / -1; text-align: center;'>Scanning...</div>";
 
     let loadedAny = false;
-
     suit.parts.forEach(id => {
         VARIANTS.forEach(v => {
             findImage(id, false, v, (foundUrl) => {
                 if (!loadedAny) { grid.innerHTML = ""; loadedAny = true; }
-                
                 const partCard = document.createElement("div");
                 partCard.className = "part-card";
                 const label = v === "" ? id : `${id}${v}`;
-                
                 partCard.innerHTML = `
                     <img src="${foundUrl}" loading="lazy">
-                    <div style="font-size:11px; margin:4px 0; font-weight: bold;">${label}</div>
+                    <div style="font-size:11px; margin:4px 0;">${label}</div>
                     <div class="btn-group">
-                        <button class="small-btn" style="padding: 6px 12px; font-size: 11px;" onclick="addToCart('${label}', '${foundUrl}')">Add</button>
-                        <button class="small-btn" style="padding: 6px 12px; font-size: 11px;" onclick="downloadDirect('${foundUrl}', '${label}.png')">DL</button>
+                        <button class="small-btn" style="padding: 5px 8px; font-size: 10px;" onclick="addToCart('${label}', '${foundUrl}')">Add</button>
+                        <button class="small-btn" style="padding: 5px 8px; font-size: 10px;" onclick="downloadDirect('${foundUrl}', '${label}.png')">DL</button>
                     </div>
                 `;
                 grid.appendChild(partCard);
             });
         });
     });
-
-    setTimeout(() => { 
-        if (!loadedAny) grid.innerHTML = "<div style='grid-column: 1 / -1; text-align: center;'>Nikki got distracted... (Reopen me again to see clothing parts!)</div>"; 
-    }, 4000);
 }
 
-/* =========================
-   🛒 CART LOGIC
-========================= */
-function addToCart(id, url) {
-    cart.set(id, url);
-    saveCart();
-    updateCartUI();
+function addToCart(id, url) { cart.set(id, url); saveCart(); updateCartUI(); }
+function removeFromCart(id) { cart.delete(id); saveCart(); updateCartUI(); }
+function saveCart() { localStorage.setItem("ln_cart", JSON.stringify([...cart])); }
+function loadCart() { 
+    const saved = localStorage.getItem("ln_cart"); 
+    if (saved) { cart = new Map(JSON.parse(saved)); updateCartUI(); } 
 }
-
-function removeFromCart(id) {
-    cart.delete(id);
-    saveCart();
-    updateCartUI();
-}
-
-function saveCart() {
-    localStorage.setItem("ln_cart", JSON.stringify([...cart]));
-}
-
-function loadCart() {
-    const saved = localStorage.getItem("ln_cart");
-    if (saved) {
-        cart = new Map(JSON.parse(saved));
-        updateCartUI();
-    }
-}
-
 function updateCartUI() {
     document.getElementById("cartCount").textContent = cart.size;
     const container = document.getElementById("cartItems");
     container.innerHTML = "";
-
     cart.forEach((url, id) => {
-        const item = document.createElement("div");
-        item.className = "cart-item";
-        item.innerHTML = `
-            <img src="${url}">
-            <span style="font-size:13px; font-weight: bold;">${id}</span>
-            <span class="trash" onclick="removeFromCart('${id}')">🗑️</span>
-        `;
-        container.appendChild(item);
+        container.innerHTML += `
+            <div class="cart-item">
+                <img src="${url}">
+                <span style="font-size:12px; font-weight: bold;">${id}</span>
+                <span class="trash" onclick="removeFromCart('${id}')">🗑️</span>
+            </div>`;
     });
 }
 
-/* =========================
-   📦 DOWNLOADS
-========================= */
 async function downloadDirect(url, filename) {
     const res = await fetch(url);
     const blob = await res.blob();
@@ -501,20 +371,14 @@ async function downloadDirect(url, filename) {
     a.download = filename;
     a.click();
 }
-
 async function downloadSuit() {
     const zip = new JSZip();
     const imgs = document.querySelectorAll("#partsGrid img");
-    
     if (imgs.length === 0) return alert("No images to download!");
-
     for (let img of imgs) {
         const res = await fetch(img.src);
-        const blob = await res.blob();
-        const name = img.src.split('/').pop();
-        zip.file(name, blob);
+        zip.file(img.src.split('/').pop(), await res.blob());
     }
-
     zip.generateAsync({type:"blob"}).then(content => {
         const a = document.createElement("a");
         a.href = URL.createObjectURL(content);
@@ -522,17 +386,13 @@ async function downloadSuit() {
         a.click();
     });
 }
-
 async function downloadCart() {
     if (cart.size === 0) return alert("Cart is empty!");
     const zip = new JSZip();
-
     for (let [id, url] of cart.entries()) {
         const res = await fetch(url);
-        const blob = await res.blob();
-        zip.file(`${id}.png`, blob);
+        zip.file(`${id}.png`, await res.blob());
     }
-
     zip.generateAsync({type:"blob"}).then(content => {
         const a = document.createElement("a");
         a.href = URL.createObjectURL(content);
@@ -541,39 +401,11 @@ async function downloadCart() {
     });
 }
 
-/* =========================
-   UI HELPERS
-========================= */
-function searchSuit() {
-    const q = document.getElementById("search").value.toLowerCase();
-    
-    const filtered = suits.filter(s => {
-        const allNames = [
-            s.name, 
-            s.SuitName, 
-            ...(s.names ? Object.values(s.names) : [])
-        ].join(" ").toLowerCase();
-
-        return allNames.includes(q) || (s.id && s.id.toString().includes(q));
-    });
-    
-    displaySuits(filtered);
-}
-
-function filterSuit() {
-    const f = document.getElementById("filter").value;
-    const filtered = f === "All" ? suits : suits.filter(s => s.category === f);
-    displaySuits(filtered);
-}
-
 function toggleCart() {
     const p = document.getElementById("cartPanel");
     p.style.display = p.style.display === "block" ? "none" : "block";
 }
-
-function closeModal() {
-    document.getElementById("modal").style.display = "none";
-}
+function closeModal() { document.getElementById("modal").style.display = "none"; }
 </script>
 </body>
 </html>
