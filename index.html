@@ -373,21 +373,17 @@ function findImage(id, isSuit, variant, callback) {
 fetch("data.json")
     .then(r => r.json())
     .then(data => {
+        // Automatically sort data by ID numerically (Lowest to Highest)
+        data.sort((b, a) => {
+            // Using parseInt ensures it works even if your IDs are saved as strings ("123") instead of numbers (123)
+            return parseInt(a.id) - parseInt(b.id); 
+        });
+
         suits = data;
         displaySuits(suits);
         loadCart();
     })
     .catch(err => console.error("Could not load data.json", err));
-
-function displaySuits(list) {
-    const grid = document.getElementById("suitGrid");
-    grid.innerHTML = "";
-
-    list.forEach(s => {
-        if (!s || !s.id) return;
-        createCard(s);
-    });
-}
 
 function createCard(s) {
     const grid = document.getElementById("suitGrid");
