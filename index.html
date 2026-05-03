@@ -72,10 +72,26 @@ input, select {
   padding: 15px;
 }
 
+/* Restores the stylish card look */
+.suit-card {
+  background: rgba(255, 255, 255, 0.4); 
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  order: 100;
+  opacity: 0.5; /* "Ghost" mode for empty cards */
+  transition: all 0.3s ease;
+}
+
+/* Stylish card when image loads */
 .suit-card.has-image {
   order: 1; 
   opacity: 1 !important; 
-  background: #fff;
+  background: white;
+  box-shadow: 0 8px 20px rgba(255, 133, 186, 0.15);
+  border: 1px solid #fff;
 }
 
 .suit-card img {
@@ -84,20 +100,26 @@ input, select {
   object-fit: contain;
   border-radius: 12px;
   margin-bottom: 8px;
-  background: transparent;
+  background: transparent; /* OG colors stay pure */
 }
 
-.suit-card:active {
-  transform: scale(0.97);
-}
-
-.suit-card img {
-  width: 100%;
-  height: 160px;
-  object-fit: contain;
-  border-radius: 12px;
-  margin-bottom: 8px;
-  background: rgba(255, 255, 255, 0.4);
+/* Fixes the "X" button position */
+.close-btn {
+  position: absolute; /* Changed from sticky */
+  top: 15px;
+  right: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--nikki-pink);
+  cursor: pointer;
+  z-index: 1001;
+  background: #fff0f6; /* Soft pink background */
+  width: 40px;
+  height: 40px;
+  line-height: 38px;
+  text-align: center;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .modal {
@@ -126,24 +148,6 @@ input, select {
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
 
-.close-btn {
-  position: sticky;
-  top: 0;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  color: var(--nikki-pink);
-  cursor: pointer;
-  z-index: 1001;
-  background: white;
-  width: 35px;
-  height: 35px;
-  line-height: 32px;
-  text-align: center;
-  border-radius: 50%;
-  margin-bottom: -35px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
 
 .parts-grid {
   display: grid;
@@ -288,13 +292,15 @@ input, select {
 
 <div class="modal" id="modal" onclick="closeModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
+
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+
         <h2 id="suitTitle"></h2>
         <button class="small-btn" style="margin-bottom:10px; padding: 10px;" onclick="downloadSuit()">Download Full Suit</button>
         <div class="parts-grid" id="partsGrid"></div>
     </div>
 </div>
 
-<span class="close-btn" onclick="closeModal()">&times;</span>
 
 <div class="cart-panel" id="cartPanel">
     <h3>My Cart</h3>
