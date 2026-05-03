@@ -241,66 +241,66 @@ input:focus, select:focus {
 
 @media (max-width: 600px) {
 
-  header {
-    font-size: 20px;
-    padding: 15px;
-  }
-
-  .topbar {
-    gap: 10px;
-    padding: 15px;
-  }
-
-  input, select {
-    padding: 10px 15px;
-    font-size: 14px;
-  }
-
-  .cart-btn {
-    padding: 10px 16px;
-    font-size: 14px;
-  }
-
-  /* Better grid for phones */
-  .suit-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 12px;
-    padding: 15px;
-  }
-
-  /* Smaller cards */
-  .suit-card img {
-    height: 140px;
-  }
-
-  .suit-card div {
-    font-size: 12px;
-  }
-
-  /* Modal fix */
+  /* Modal container */
   .modal-content {
-    padding: 15px;
-    border-radius: 20px;
+    padding: 12px;
+    border-radius: 18px;
   }
 
-  /* Parts grid tighter */
+  /* Title spacing */
+  #suitTitle {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  /* Parts grid — BIGGEST FIX */
   .parts-grid {
-    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(2, 1fr); /* force 2 clean columns */
+    gap: 14px; /* more breathing space */
   }
 
+  /* Part cards */
+  .part-card {
+    padding: 10px;
+    border-radius: 16px;
+  }
+
+  /* Image size (less cramped look) */
   .part-card img {
-    height: 90px;
+    height: 100px;
+  }
+
+  /* Label spacing */
+  .part-card div {
+    font-size: 11px;
+    margin: 6px 0;
+  }
+
+  /* Buttons — less squished */
+  .btn-group {
+    gap: 6px;
   }
 
   .small-btn {
-    padding: 6px 10px;
-    font-size: 10px;
+    flex: 1; /* makes buttons equal width */
+    padding: 6px 0;
+    font-size: 11px;
+    border-radius: 12px;
+  }
+
+  /* Download button */
+  .modal-content .small-btn:first-of-type {
+    width: 100%;
+    margin-bottom: 12px;
   }
 }
 
 button, .suit-card {
   -webkit-tap-highlight-color: transparent;
+}
+
+.part-card {
+  box-shadow: 0 4px 10px rgba(255, 133, 186, 0.15);
 }
     </style>
 </head>
