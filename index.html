@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atelier Archives</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/V1si0n-LNpr3D1cf0r/mn-res/main/head_12.png">
-    
+
     <style>
 :root {
   --nikki-pink: #ff85ba;
@@ -15,17 +15,15 @@
   --text-main: #5d4157;
 }
 
-/* ===== GLOBAL STYLES ===== */
 body {
   margin: 0;
   font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: radial-gradient(circle at top right, #fff0f6, transparent), #ffe4f0;
   background-attachment: fixed;
   color: var(--text-main);
-  -webkit-tap-highlight-color: transparent; /* Removes blue box on mobile tap */
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* ===== HEADER ===== */
 header {
   padding: 20px;
   text-align: center;
@@ -38,7 +36,6 @@ header {
   border-bottom: 2px solid var(--glass-border);
 }
 
-/* ===== TOP BAR (Search & Filter) ===== */
 .topbar {
   display: flex;
   justify-content: center;
@@ -68,7 +65,6 @@ input, select {
   box-shadow: 0 4px 10px rgba(255, 133, 186, 0.3);
 }
 
-/* ===== SUIT GRID ===== */
 .suit-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -76,25 +72,19 @@ input, select {
   padding: 15px;
 }
 
-/* ===== SUIT CARD (Mobile Optimized) ===== */
-.suit-card {
-  background: rgba(255, 255, 255, 0.5); 
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 20px;
-  padding: 12px;
-  text-align: center;
-  cursor: pointer;
-  order: 100; /* Pushes items without images to the end */
-  opacity: 0.65;
-  transition: opacity 0.3s ease, transform 0.2s ease;
-  will-change: opacity, transform; /* GPU optimization */
-}
-
-/* "Bubble up" items that successfully load an image */
 .suit-card.has-image {
   order: 1; 
-  opacity: 1;
-  background: rgba(255, 255, 255, 0.9);
+  opacity: 1 !important; 
+  background: #fff;
+}
+
+.suit-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: contain;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  background: transparent;
 }
 
 .suit-card:active {
@@ -110,7 +100,6 @@ input, select {
   background: rgba(255, 255, 255, 0.4);
 }
 
-/* ===== MODAL & OVERLAYS ===== */
 .modal {
   display: none;
   position: fixed;
@@ -137,7 +126,6 @@ input, select {
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
 
-/* Sticky Close Button to prevent refresh-traps */
 .close-btn {
   position: sticky;
   top: 0;
@@ -157,7 +145,6 @@ input, select {
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* ===== PARTS GRID (Inside Modal) ===== */
 .parts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -188,7 +175,6 @@ input, select {
   justify-content: center;
 }
 
-/* ===== CART PANEL ===== */
 .cart-panel {
   display: none;
   position: fixed;
@@ -225,11 +211,9 @@ input, select {
   margin-left: auto;
 }
 
-/* ===== MOBILE-SPECIFIC FIXES ===== */
 @media (max-width: 600px) {
-  /* Fix for the "crammed" UI in the modal */
   .parts-grid {
-    grid-template-columns: repeat(2, 1fr) !important; /* Force 2 columns for button space */
+    grid-template-columns: repeat(2, 1fr) !important;
     gap: 12px;
   }
 
@@ -250,19 +234,19 @@ input, select {
 
   #suitTitle {
     font-size: 18px;
-    margin-right: 35px; /* Leave room for the sticky Close button */
+    margin-right: 35px;
   }
 }
 
 .mobile-notice {
-    font-size: 12px;           /* Small and clean */
-    font-family: sans-serif;   /* Standard font for readability */
-    font-weight: normal;       /* Not bold like the title */
-    color: #5d4157;            /* Matches your text-main variable */
-    opacity: 0.8;              /* Softens the look */
-    margin-top: 8px;           /* Space between title and notice */
-    display: block;            /* Forces it to the next line */
-    letter-spacing: 0.5px;     /* Easier to read */
+    font-size: 12px;
+    font-family: sans-serif;
+    font-weight: normal;
+    color: #5d4157;
+    opacity: 0.8;
+    margin-top: 8px;
+    display: block;
+    letter-spacing: 0.5px;
 }
     </style>
 </head>
@@ -270,7 +254,7 @@ input, select {
 
 <header>
     HDA Archives
-    <div class="mobile-notice">Best viewed using "Desktop Site" on mobile devices</div>
+    <div class="mobile-notice">Best viewed using "Desktop Site" on mobile devices and tap the background to return</div>
 </header>
 
 <div class="topbar">
@@ -302,7 +286,6 @@ input, select {
 
 <div class="suit-grid" id="suitGrid"></div>
 
-<!-- Modal -->
 <div class="modal" id="modal" onclick="closeModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h2 id="suitTitle"></h2>
@@ -313,7 +296,6 @@ input, select {
 
 <span class="close-btn" onclick="closeModal()">&times;</span>
 
-<!-- Cart Panel -->
 <div class="cart-panel" id="cartPanel">
     <h3>My Cart</h3>
     <div id="cartItems"></div>
@@ -332,29 +314,24 @@ const BASE_USER = "https://raw.githubusercontent.com/V1si0n-LNpr3D1cf0r";
 const REPOS = ["mn-res-b1", "mn-res-b2", "mn-res-b3"]; 
 const VARIANTS = ["-1", "-2", "-3", "-4", "-5", "-6", "-7", "-8", "-9", "-13", "-101", "-201", "-301", "-701", "-901"];
 
-/* =========================
-   👀 LAZY LOADING OBSERVER (Fixes Mobile Lag)
-========================= */
 const imageObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             const img = entry.target;
             const suitId = img.dataset.id;
+            const card = img.closest('.suit-card');
             
-            // Only find the image once it scrolls into view
             findImage(suitId, true, "", (foundUrl) => {
                 img.src = foundUrl;
                 img.style.opacity = 1;
+                if (card) card.classList.add('has-image');
             });
             
-            observer.unobserve(img); // Stop watching it once loaded
+            observer.unobserve(img);
         }
     });
-}, { rootMargin: "100px" }); // Start loading slightly before it appears on screen
+}, { rootMargin: "100px" });
 
-/* =========================
-   🔍 SMART FINDER
-========================= */
 function findImage(id, isSuit, variant, callback) {
     const folder = isSuit ? "suits" : "parts";
     let repoIndex = 0;
@@ -375,9 +352,6 @@ function findImage(id, isSuit, variant, callback) {
     tryNextRepo();
 }
 
-/* =========================
-   📦 LOAD DATA
-========================= */
 fetch("data.json")
     .then(r => r.json())
     .then(data => {
@@ -387,9 +361,6 @@ fetch("data.json")
     })
     .catch(err => console.error("Could not load data.json", err));
 
-/* =========================
-    🖼 SUIT GRID
-========================= */
 function displaySuits(list) {
     const grid = document.getElementById("suitGrid");
     grid.innerHTML = "";
@@ -407,7 +378,6 @@ function createCard(s) {
 
     const name = s.names?.en || s.names?.cn || s.names?.jp || s.name || s.SuitName || "Unnamed Suit";
 
-    // Set up card with a placeholder image, attach the ID via data-id
     card.innerHTML = `
         <img data-id="${s.id}" style="opacity: 0; transition: opacity 0.4s ease-in-out;" alt="${name}">
         <div style="margin-top:8px; font-weight:bold; font-size: 14px;">${name}</div>
@@ -415,14 +385,10 @@ function createCard(s) {
     card.onclick = () => openSuit(s);
     grid.appendChild(card);
 
-    // Tell our observer to watch this newly created image box
     const imgElement = card.querySelector('img');
     imageObserver.observe(imgElement);
 }
 
-/* =========================
-   🧾 OPEN SUIT
-========================= */
 function openSuit(suit) {
     currentSuit = suit;
     document.getElementById("modal").style.display = "flex";
@@ -458,13 +424,10 @@ function openSuit(suit) {
     });
 
     setTimeout(() => { 
-        if (!loadedAny) grid.innerHTML = "<div style='grid-column: 1 / -1; text-align: center;'>Nikki got distracted... (Reopen me again to see clothing parts!)</div>"; 
+        if (!loadedAny) grid.innerHTML = "<div style='grid-column: 1 / -1; text-align: center;'>Nikki got distracted... (Reopen me again to see clothing parts! ...or wait since she's getting the items up!)</div>"; 
     }, 4000);
 }
 
-/* =========================
-   🛒 CART LOGIC
-========================= */
 function addToCart(id, url) {
     cart.set(id, url);
     saveCart();
@@ -506,9 +469,6 @@ function updateCartUI() {
     });
 }
 
-/* =========================
-   📦 DOWNLOADS
-========================= */
 async function downloadDirect(url, filename) {
     const res = await fetch(url);
     const blob = await res.blob();
@@ -557,9 +517,6 @@ async function downloadCart() {
     });
 }
 
-/* =========================
-   UI HELPERS
-========================= */
 function searchSuit() {
     const q = document.getElementById("search").value.toLowerCase();
     
