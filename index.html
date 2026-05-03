@@ -238,6 +238,70 @@ input:focus, select:focus {
     font-size: 16px;
     margin-left: auto; /* Pushes trash to the right */
 }
+
+@media (max-width: 600px) {
+
+  header {
+    font-size: 20px;
+    padding: 15px;
+  }
+
+  .topbar {
+    gap: 10px;
+    padding: 15px;
+  }
+
+  input, select {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+
+  .cart-btn {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  /* Better grid for phones */
+  .suit-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    padding: 15px;
+  }
+
+  /* Smaller cards */
+  .suit-card img {
+    height: 140px;
+  }
+
+  .suit-card div {
+    font-size: 12px;
+  }
+
+  /* Modal fix */
+  .modal-content {
+    padding: 15px;
+    border-radius: 20px;
+  }
+
+  /* Parts grid tighter */
+  .parts-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 10px;
+  }
+
+  .part-card img {
+    height: 90px;
+  }
+
+  .small-btn {
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+}
+
+button, .suit-card {
+  -webkit-tap-highlight-color: transparent;
+}
     </style>
 </head>
 <body>
