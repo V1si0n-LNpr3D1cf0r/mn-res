@@ -375,6 +375,9 @@ fetch("data.json")
     .then(r => r.json())
     .then(data => {
         suits = data;
+
+        suits.sort((a, b) => Number(b.id) - Number(a.id));
+        
         displaySuits(suits);
         loadCart();
     })
